@@ -1,6 +1,15 @@
 # Noda
 An Array-Oriented, OOP, FP, and Logical Programming Language for Concise Pseudocode-like Scalability
 
+'Noda' is the faux-pluralization of the Latin word 'nodum', meaning 'knot'. It was named after the topological subfield of Knot Theory. Though many introduced to the language seem convinced it means "No duh!", which is equally accurate. ~~where I have conducted heavy research into devising an algorithm to solve the infamous Unknotting Problem. Neither Python nor Julia were up to the task, so I devised a new language.~~
+
+Noda is ambitious. It seeks to bring the concision and power of array languages like APL to the readability and friendliness of Python. To make so accessible functional programming constructs like map-filter-reduce they seem trivial to kindergarteners. To popularize Prolog-like logical deduction for an evermore AI-driven world. To devise a language that is fun to write, quick to type, cool to look at, and pleases beginners and experts alike.
+
+It is a language designed by Data Scientists, for Data Scientists.
+
+Expectations— 
+Let `°` represent any operator, `//` and `/* */` enclose comments, code comparisons to Python will be written in tandem. Nodan operators 
+
 ```
 block of code example?
 ```
@@ -16,7 +25,7 @@ Does this `x` work?
 ! && || & | !! >< -> <-> <=> ==> >=<
 ~~ /\ \/ >-< >>> <<< 
 + - * / ^ % ^/ ^! \
-= °= := ::= =< ?? o
+= °= := ::= =< ?? 
 == != > < >= <= ~= %% === !== 
 -< +< <> -*
 ?: !: : |: ><: :: ; ;; ? 
@@ -29,5 +38,41 @@ Does this `x` work?
 +- -+ °,° °|° °&° 
 true false null *> +>
 [] {} [} [) ()
+^^ WE need a precedence table for this shit
+```
+#### Core Ideas
+1. Noda
 
+#### Basic Data Structures
+```
+[]    list        [1,2,3,4,5]
+[:)   range       [1:5) == [1,2,3,4]; [:5] == [0,1,2,3,4,5]
+[::)  interval    [2::6)  // [2,6) in math, exclusive of 6
+[;]   matrix      [1 2; 3 4]
+{}    set         {1,2,3,4}
+{:}   dict/map    {"a": 1, "b": 2, "c": 3}
+{::}  dataframe   {["a","b","c"]:: [[4,5,6],[7,8,9],[10,11,12]]}
+(:)   datetime    (8:35:42)  // 8 hours, 35 minutes, 42 seconds
+""    string      "Hi programmer!"
+^""   fstring     ^"Hello {name}"
+''    regex       '\d+'
+1|2   logex       4&(!100|400)   // logical universe encapsulation
+[_,_] pattern     [_,_+1]        // pattern for consecutive pairs
+```
+
+#### Arithmetic
+Arithmetic is like Julia, but also features a root operator.
+```csharp
++   plus       // 2 + 3 == 5
+-   minus      // 2 - 3 == -1
+*   times      // 2 * 3 == 6
+/   divide     // 3 / 6 == 0.5    /4 == 1/4 == 0.25
+^   exponent   // 2 ^ 3 == 8
+%   modulus    // 27 % 13 == 1
+^/  root       // 3^/125 == 5     ^/100 == 10
+```
+
+#### String Arithmetic
+String arithmetic is partly inspired by Julia, with many other features.
+```csharp
 ```
