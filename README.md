@@ -44,7 +44,7 @@ true false null *> +>
 1. Noda
 
 #### Basic Data Structures
-```csharp
+```js
 []    list        [1,2,3,4,5]
 [:)   range       [1:5) == [1,2,3,4]; [:5] == [0,1,2,3,4,5]
 [::)  interval    [2::6)  // [2,6) in math, exclusive of 6
@@ -111,7 +111,7 @@ Pattern Operations
 ```
 
 #### Assignment
-```csharp
+```js
 =   assign
 °=  reassign
 :=  function
