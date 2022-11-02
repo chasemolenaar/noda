@@ -7,7 +7,7 @@ block of code example?
 
 Does this `x` work?
 
-```pinescript
+```ada
 (<<,at)(L,n,i):= [*L[:i),n,*L(:i]]
 
 // comment test
