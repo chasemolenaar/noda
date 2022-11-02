@@ -7,7 +7,7 @@ block of code example?
 
 Does this `x` work?
 
-```scala
+```csharp
 (<<,at)(L,n,i):= [*L[:i),n,*L(:i]]
 
 // comment test
