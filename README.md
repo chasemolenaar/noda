@@ -44,7 +44,7 @@ true false null *> +>
 1. Noda
 
 #### Basic Data Structures
-```
+```csharp
 []    list        [1,2,3,4,5]
 [:)   range       [1:5) == [1,2,3,4]; [:5] == [0,1,2,3,4,5]
 [::)  interval    [2::6)  // [2,6) in math, exclusive of 6
@@ -56,23 +56,74 @@ true false null *> +>
 ""    string      "Hi programmer!"
 ^""   fstring     ^"Hello {name}"
 ''    regex       '\d+'
-1|2   logex       4&(!100|400)   // logical universe encapsulation
-[_,_] pattern     [_,_+1]        // pattern for consecutive pairs
+1><2  logex       4&(!100|400)   // logical universe encapsulation
+[_]   pattern     [_,_+1]        // pattern for consecutive pairs
 ```
 
 #### Arithmetic
 Arithmetic is like Julia, but also features a root operator.
 ```csharp
-+   plus       // 2 + 3 == 5
--   minus      // 2 - 3 == -1
-*   times      // 2 * 3 == 6
-/   divide     // 3 / 6 == 0.5    /4 == 1/4 == 0.25
-^   exponent   // 2 ^ 3 == 8
-%   modulus    // 27 % 13 == 1
-^/  root       // 3^/125 == 5     ^/100 == 10
++   plus       2 + 3 == +5
+-   minus      2 - 3 == -1
+*   times      2 * 3 == 6
+/   divide     3 / 6 == 0.5    /4 == 1/4 == 0.25
+^   exponent   2 ^ 3 == 8
+%   modulus    27 % 13 == 1
+^/  root       3^/125 == 5     ^/100 == 10
+\   ldivide    Ax = b   ==>    x = A\b     // Also for quotients?? Or class-defining operators?
 ```
 
 #### String Arithmetic
-String arithmetic is partly inspired by Julia, with many other features.
+String arithmetic is partly inspired by Julia, with many other features. All operations here apply to regexes too.
+```csharp
++   space      "hi" + "there" == "hi there"
+*   concat     "match" * "box" == "matchbox"
+°   literal    "ship""yard" == "shipyard"
+/   remove     "assassin"/"ass" == "in"
+^   repeat     "na" ^ 4 == "nananana"     // batman!!
+%   modulus    // 27 % 13 == 1
+^/  strip      "xX_"^/"XXxUsernamexXX" == "Username"    ^/" \n\n   stuff  " == "stuff"
+```
+^Though frankly there should be a little section showing how these are used in unary fashion
+
+Pattern Operations
+
+```csharp
+-<  split     "2/14/23"-<"/" == ["2","14","23"]     -<"Jane Smith" == ["Jade","Smith]   // can also be used on regexes
++<  snip      "2/14/23"+<"/" == ["2/","14/","23"]
+<>  findall   "123def56"<>'\d+' == ["123","56"]
+%   remainder "try-method" % "-" == "method"
+```
+
+#### Comparators
+
+```csharp
+==  equal
+!=  inequal
+<   less
+<=  less or equal
+>   greater
+>=  greater or equal
+%%  divisible
+=== equivalent
+!== nonequivalent       'str' !== "str"
+~=  match               Also !~ too?
+```
+
+#### Assignment
+```csharp
+=   assign
+°=  reassign
+:=  function
+::= class
+=<  vacuum
+=*  dynamite
+??  coalesce
+```
+
+#### Setwise Operators
 ```csharp
 ```
+
+
+
