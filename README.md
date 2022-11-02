@@ -52,8 +52,8 @@ true false null *> +>
 {}    set         {1,2,3,4}
 {:}   dict/map    {"a": 1, "b": 2, "c": 3}
 {::}  dataframe   {["a","b","c"]:: [[4,5,6],[7,8,9],[10,11,12]]}
-(:)   datetime    (8:35:42)  // 8 hours, 35 minutes, 42 seconds
-""    string      "Hi programmer!"
+(:)   dat​etime   (8:35:42)  // 8 hours, 35 minutes, 42 seconds
+""    str​ing     "Hi programmer!"
 ^""   fstring     ^"Hello {name}"
 ''    regex       '\d+'
 1><2  logex       4&(!100|400)   // logical universe encapsulation
@@ -114,8 +114,8 @@ Pattern Operations
 ```js
 =   assign
 °=  reassign
-:=  function
-::= class
+:=  func​tion
+::= cl​ass
 =<  vacuum
 =*  dynamite
 ??  coalesce
@@ -123,7 +123,122 @@ Pattern Operations
 
 #### Setwise Operators
 ```csharp
+,   comma
+<<  append
+>>  pop
+++  concat
+--  difference
+\\  remove
+**  intersect
+^^  symdiff
+```
+
+#### Membership Operators
+```csharp
+#   length
+@   in/at
+$   subset/subsequence
+>-> starts
+<-< ends
+```
+
+#### Special Set Operators
+```csharp
+%   reverse
+~   complement
+`   transpose  
+~<  tulip         ascend
+~>  umbrella      descend
+<~> hotdog        rotate mustache
+->> pine          reshape
+,,  zip
++*  cosmos
+```
+
+#### Relational Operators
+```csharp
+>==<  inner join
+>==>  right join
+<==<  left join
+<==>  outer join
+<<>>  disjoint
+
+#### Functional Operators
+```csharp
+:=  define
+=>  as/map
+=:  filter
+#   compose
+-*  wand
+:=: dogbone
+.:  grapevine
+```
+
+## LOGIC
+
+#### Logic Operators
+
+```csharp
+?   bool
+&&  and
+||  or
+```
+
+#### Logex Operators
+```csharp
+!   not
+&   and
+|   or
+!!  nor
+><  xor
+->  then
+<-> iff
+```
+
+#### Metalogic Operators
+```csharp
+<=> equivalent
+==> entail/imply
+>=< nonequivalent
+```
+
+
+#### Bitwise Operators
+```js
+~~  complement
+/\  and
+\/  or
+>-< xor
+>>> rshift
+<<< lshift
 ```
 
 
 
+#### Procedural Operators
+```csharp
+:   if/elif       (|:  double-if)
+><: else
+::  loop
+;   semicolon     (;; for break?)
+?:  ternary       (?: !: try except)
+```
+
+#### Combinators
+```csharp
+!°  not
+°:  switch        (but also +: and -: should be mentioned)
+~°  swaperator
+.°  reduce/elementwise
+[°] scan
+```
+
+#### Alternators
+```csharp
++-  plus-minus
+-+  minus-plus
+°,° commafy
+°|° either
+°&° both
+°!!° neither
+```
