@@ -12,7 +12,7 @@ Does this `x` work?
 
 // comment test
 /* multiline comment test */
-// /* */ ^"" ''
+// /* */
 ! && || & | !! >< -> <-> <=> ==> >=<
 ~~ /\ \/ >-< >>> <<< 
 + - * / ^ % ^/ ^! \
