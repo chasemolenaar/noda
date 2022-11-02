@@ -6,3 +6,7 @@ block of code example?
 ```
 
 Does this `x` work?
+
+```js
+(<<,at)(L,n,i):= [*L[:i),n,*L(:i]]
+```
