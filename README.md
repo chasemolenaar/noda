@@ -7,7 +7,7 @@ block of code example?
 
 Does this `x` work?
 
-```ada
+```c
 (<<,at)(L,n,i):= [*L[:i),n,*L(:i]]
 
 // comment test
