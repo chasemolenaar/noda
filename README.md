@@ -44,21 +44,41 @@ true false null *> +>
 1. Noda
 
 #### Basic Data Structures
-```js
+```csharp
 []    list        [1,2,3,4,5]
 [:)   range       [1:5) == [1,2,3,4]; [:5] == [0,1,2,3,4,5]
-[::)  interval    [2::6)  // [2,6) in math, exclusive of 6
-[;]   matrix      [1 2; 3 4]
-{}    set         {1,2,3,4}
+[::)  interval    [2::6)       // [2,6) in math, exclusive of 6
+[;]   matrix      [1 2; 3 4]   // 2-dimensionsal data structure
+[}    ring        [1,2,3,4,5}  // loops on itself
+{}    set         {1,2,3,4}    // unordered
 {:}   dict/map    {"a": 1, "b": 2, "c": 3}
 {::}  dataframe   {["a","b","c"]:: [[4,5,6],[7,8,9],[10,11,12]]}
-(:)   dat​etime   (8:35:42)  // 8 hours, 35 minutes, 42 seconds
-""    str​ing     "Hi programmer!"
+""    string      "Hi programmer!"
 ^""   fstring     ^"Hello {name}"
 ''    regex       '\d+'
 1><2  logex       4&(!100|400)   // logical universe encapsulation
 [_]   pattern     [_,_+1]        // pattern for consecutive pairs
+<>    empty       {} == <>       // matches to anything "empty"
 ```
+
+#### Numeric Types, Constants, Built-ins
+```
++     nat         0           // unsigned positive integer (natural number)
+-     int         -8          // signed integer
+.     flo         1.0         // floating point number
+i     com         3+2i        // complex number
+(:)   datetime    (8:35:42)   // 8 hours, 35 minutes, 42 seconds ​
+
+I     identity    [1 0; 0 1]  // identity matrix; takes shape of operand
+e     Euler's     2.71828...  // constant
+
+
+(||)  round
+[||]  floor/lowercase
+{||}  absolute value/uppercase
+```
+
+
 
 #### Arithmetic
 Arithmetic is like Julia, but also features a root operator.
@@ -66,6 +86,7 @@ Arithmetic is like Julia, but also features a root operator.
 +   plus       2 + 3 == +5
 -   minus      2 - 3 == -1
 *   times      2 * 3 == 6
+    coef       10n == 10 * n
 /   divide     3 / 6 == 0.5    /4 == 1/4 == 0.25
 ^   exponent   2 ^ 3 == 8
 %   modulus    27 % 13 == 1
@@ -82,7 +103,7 @@ String arithmetic is partly inspired by Julia, with many other features. All ope
 /   remove     "assassin"/"ass" == "in"
 ^   repeat     "na" ^ 4 == "nananana"     // batman!!
 %   modulus    // 27 % 13 == 1
-^/  strip      "xX_"^/"XXxUsernamexXX" == "Username"    ^/" \n\n   stuff  " == "stuff"
+^/  strip      ^/"   str   " == "str"
 ```
 ^Though frankly there should be a little section showing how these are used in unary fashion
 
@@ -162,6 +183,7 @@ $   subset/subsequence
 <==<  left join
 <==>  outer join
 <<>>  disjoint
+```
 
 #### Functional Operators
 ```csharp
@@ -176,13 +198,13 @@ $   subset/subsequence
 
 ## LOGIC
 
-#### Logic Operators
-
+#### Coercive Logic Operators
 ```csharp
 ?   bool
 &&  and
 ||  or
 ```
+Each of these coerce non-booleans into boolean values. `?3 == true` 
 
 #### Logex Operators
 ```csharp
@@ -242,3 +264,16 @@ $   subset/subsequence
 °&° both
 °!!° neither
 ```
+
+#### Shortcuts
+```csharp
+{+}   {>=0}
+{-}   {<0}
+{*}   {*L}
+{:}   {L[0]:  L[1]}
+{::}  {L[0}:: L[1]}
+{++}  full-flatten
+```
+
+
+
