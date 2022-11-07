@@ -91,7 +91,10 @@ Ranges `[:)` are iterables which generate lists, often used for slicing. Use bra
 ![image](https://user-images.githubusercontent.com/84992695/200396390-b1cc877c-803d-45de-864b-5d8a91acc4f0.png)
 ![image](https://user-images.githubusercontent.com/84992695/200396524-b24a112d-ccd1-400c-a872-55775bbea1fe.png)
 
-<img src="https://user-images.githubusercontent.com/84992695/200396390-b1cc877c-803d-45de-864b-5d8a91acc4f0.png" width="200">
+<img src="https://user-images.githubusercontent.com/84992695/200396390-b1cc877c-803d-45de-864b-5d8a91acc4f0.png" width="1000">
+
+MORE OF THIS PRESENTATION NEEDS TO BE IMAGES FRANKLY, THEY'RE CLEANER
+
 
 
 Sections to be added—
@@ -154,7 +157,8 @@ String arithmetic is partly inspired by Julia, with many other features. All ope
 °   literal    "ship""yard" == "shipyard"           // literally concats strings
 /   remove     "walla walla" / "all" == "wa wa"
 ^   repeat     "na" ^ 4 == "nananana"     
-%   modulus    "try-my-lang" % "-" == "my-lang"     
+-   modulus    "try-my-lang" - "-" == "my-lang"     // everything after first split
+%   modulus    "try-my-lang" % "-" == "try"         // everything before first split
 ^/  strip      ^/"   str   " == "str"
 ```
 ^Though frankly there should be a little section showing how these are used in unary fashion
