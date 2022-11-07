@@ -133,7 +133,7 @@ Arithmetic is like Julia, but also features a root operator.
 +   plus       2 + 3 == +5
 -   minus      2 - 3 == -1
 *   times      2 * 3 == 6
-°   coef       9n == 9 * n
+°   coef       9​n == 9 * n
 /   divide     3 / 6 == 0.5    /4 == 1/4 == 0.25
 ^   exponent   2 ^ 3 == 8
 %   modulus    27 % 13 == 1
