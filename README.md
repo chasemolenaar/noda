@@ -84,9 +84,13 @@ This tutorial assumes you know some Python....
 {_:_}  map         {_%%2: "even"}   // like dict, but pattern-matching
 <>     empty       {} ~= <>         // matches to anything "empty"
 ```
-Lists `[]`, sets `{}`, and tuples `()` behave similarly to Python. Lists are ordered, sets are not, tuples are immutable lists.
+Lists `[]`, sets `{}`, and tuples `()` behave similarly to Python. Lists are ordered, sets are not, tuples are immutable. 
 Rings `[}` are similar to lists, but they loop back on themselves and can be indexed anywhere: `[0,1,2,3}[4] == [0,1,2,3}[0] == 0`
-Ranges are iterables which generate lists, and can be used for slicing. 
+Ranges `[:)` are iterables which generate lists, often used for slicing. Use brackets `[`,`]` for inclusive, parens `(`,`)` for exclusive: `[1:4] == [1,2,3,4]`/`[1:4) == [1,2,3]`/`(1:4] == [2,3,4]` (doubly exclusive parens `(1:4)` is not supported). Omit one of the numbers to start at 0 or indicate an infinite range: `[:3] == [0,1,2,3]`/`(:3] == [1,2,3]`/`[0:] == [0,1,2..]`. {insert image here from presentation on ranges}. {mention linspace and stepwise}. 
+
+![image](https://user-images.githubusercontent.com/84992695/200396390-b1cc877c-803d-45de-864b-5d8a91acc4f0.png)
+![image](https://user-images.githubusercontent.com/84992695/200396524-b24a112d-ccd1-400c-a872-55775bbea1fe.png)
+
 
 Sections to be added—
 1. Lists, rings, and sets
