@@ -53,26 +53,41 @@ true false null *> +>
 #### Core Ideas
 1. Noda
 
+Noda targets both a Python audience. Noda is heavily inspired by Python, so it's safe to assume that constructs will look like Python if unspecified.
+This tutorial assumes you know some Python....
+
+#### Ground Rules
+1. Noda indexes by 0, which is the superior choice
+2. Noda is indentation sensitive, like Python
+3. 
+
 #### Basic Data Structures
 ```csharp
-[]     list        [1,2,3,4,5]
-[:)    range       [1:5) == [1,2,3,4]; [:5] == [0,1,2,3,4,5]
-[::)   interval    [2::6)       // [2,6) in math, exclusive of 6
-[;]    matrix      [1 2; 3 4]   // 2-dimensionsal data structure
-()     tuple       (1,2,3,4)    // similar to list
-[}     ring        [1,2,3,4,5}  // loops on itself
-{}     set         {1,2,3,4}    // unordered
-{:}    dict/map    {"a": 1, "b": 2, "c": 3}
+[]     list        [1,2,3,4,5]      // standard list/array
+()     tuple       (1,2,3,4)        // similar to list
+{}     set         {1,2,3,4}        // unordered
+[}     ring        [1,2,3,4,5}      // loops on itself
+
+[:)    range       [1:4) == [1,2,3] // range(1,4)
+[::)   interval    [2::6)           // [2,6) in math, excludes 6
+[;]    matrix      [1 2; 3 4]       // 2-dimensionsal data structure
+{:}    dict        {"a": 1, "b": 2, "c": 3}
 {::}   dataframe   {["a","b","c"]:: [[4,5,6],[7,8,9],[10,11,12]]}
-""     string      "Hi programmer!"
-^""    fstring     ^"Hello {name}"
-''     regex       '\d+'          // regex matching "42069"
-^''    fregex      ^'_*{name}_*'  // regex matching _____me____
-!_|_   logex       4&(!100|400)   // logical universe encapsulation
-[_+_]  pattern     [_,_+1]        // pattern for consecutive pairs
-{_:_}  map         {_<0: -1, _>0: +1, _: 0}     // implements signum
-<>     empty       {} ~= <>       // matches to anything "empty"
+
+""     string      "Hi programmer!" // regular string
+^""    fstring     ^"Hello {name}"  // f"Hello {name}" equivalent
+''     regex       '\d+'            // regex matching "42069"
+^''    fregex      ^'_*{name}_*'    // regex matching "___me___"
+
+!_|_   logex       4&(!100|400)     // logical universe encapsulation
+[_+_]  pattern     [_,_+1]          // pattern for consecutive pairs
+{_:_}  map         {_%%2: "even"}   // like dict, but pattern-matching
+<>     empty       {} ~= <>         // matches to anything "empty"
 ```
+Lists `[]`, sets `{}`, and tuples `()` behave similarly to Python. Lists are ordered, sets are not, tuples are immutable lists.
+Rings `[}` are similar to lists, but they loop back on themselves and can be indexed anywhere: `[0,1,2,3}[4] == [0,1,2,3}[0] == 0`
+Ranges are iterables which generate lists, and can be used for slicing. 
+
 Sections to be added—
 1. Lists, rings, and sets
 2. Ranges and Intervals
@@ -112,7 +127,7 @@ Arithmetic is like Julia, but also features a root operator.
 +   plus       2 + 3 == +5
 -   minus      2 - 3 == -1
 *   times      2 * 3 == 6
-    coef       10n == 10 * n
+°   coef       9n == 9 * n
 /   divide     3 / 6 == 0.5    /4 == 1/4 == 0.25
 ^   exponent   2 ^ 3 == 8
 %   modulus    27 % 13 == 1
@@ -214,16 +229,18 @@ all(1nation !% + liberty&justice)
 
 #### Setwise Operators
 ```csharp
-,   comma
-<<  append
->>  pop
-++  concat
---  difference
-\\  remove
-**  intersect
-^^  symdiff
-.°  dot
+,   comma           1,2 => (1,2)                 // commas make tuples by default
+<<  append          [1,2] << 3 == [1,2,3]        // << appends into structure
+>>  pop             [1,2,3] >> 2 == [1,3]        // pops value from list
+++  concat          [1,2] ++ [3,4] == [1,2,3,4]  // concatenates structures
+--  difference      [1,2,3,4] -- [2,3] == [1,4]  // removes subsequence (if found)
+\\  set minus       [1,2,3,4] \\ [1,3] == [2,4]  // removes each element          
+**  intersect       [1,2,3] ** [2,3,4] == [2,3]  // retrieves shared elements
+^^  symdiff         [1,2,3] ^^ [2,3,4] == [1,4]  // retrieves unshared elements
+.°  dot             [[1],[2,3]] .++ [[4,5],[6]] == [[1,4,5],[2,3,6]]
 ```
+
+
 
 1. Comma's creating tuples, trailing commas, unnecessary commas (dicts/lists/etc.)
 2. Append << and Pop >> 
@@ -235,6 +252,7 @@ all(1nation !% + liberty&justice)
 8. Difference between setwise and elementwise operations
 9. Talk about how list combinations terminate at the shortest list and why this is useful
 10. Usage of the binary dot operator .++ examples
+11. >> vs ++ for dataframes
 
 #### Membership Operators
 ```csharp
@@ -305,6 +323,8 @@ _   placeholder
 :=: dogbone
 .:  grapevine
 ```
+
+
 
 1. Outline the purpose of map-filter-reduce and why it's a powerful construct
 2. Show examples using explicit map (:=) and filter (=:) examples
@@ -392,7 +412,7 @@ Since !° is a combinator, you can use it on other operators...
 
 1. Explain how ifs don't use keywords, |: does double if (and why)
 2. ><: else symtax
-3. for loop, while loop, infinite loop (::)
+3. for loop (both @:: and $:: types), while loop, infinite loop (::)
 4. Semicolon ;
 5. Pass/break/continue
 6. ?: ternary operator, coalesce too?
