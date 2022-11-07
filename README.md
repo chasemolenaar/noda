@@ -55,25 +55,37 @@ true false null *> +>
 
 #### Basic Data Structures
 ```csharp
-[]    list        [1,2,3,4,5]
-[:)   range       [1:5) == [1,2,3,4]; [:5] == [0,1,2,3,4,5]
-[::)  interval    [2::6)       // [2,6) in math, exclusive of 6
-[;]   matrix      [1 2; 3 4]   // 2-dimensionsal data structure
-[}    ring        [1,2,3,4,5}  // loops on itself
-{}    set         {1,2,3,4}    // unordered
-{:}   dict/map    {"a": 1, "b": 2, "c": 3}
-{::}  dataframe   {["a","b","c"]:: [[4,5,6],[7,8,9],[10,11,12]]}
-""    string      "Hi programmer!"
-^""   fstring     ^"Hello {name}"
-''    regex       '\d+'          // regex matching "42069"
-^''   fregex      ^'_*{name}_*'  // regex matching _____me____
-!_|_  logex       4&(!100|400)   // logical universe encapsulation
-[_]   pattern     [_,_+1]        // pattern for consecutive pairs
-<>    empty       {} ~= <>       // matches to anything "empty"
+[]     list        [1,2,3,4,5]
+[:)    range       [1:5) == [1,2,3,4]; [:5] == [0,1,2,3,4,5]
+[::)   interval    [2::6)       // [2,6) in math, exclusive of 6
+[;]    matrix      [1 2; 3 4]   // 2-dimensionsal data structure
+()     tuple       (1,2,3,4)    // similar to list
+[}     ring        [1,2,3,4,5}  // loops on itself
+{}     set         {1,2,3,4}    // unordered
+{:}    dict/map    {"a": 1, "b": 2, "c": 3}
+{::}   dataframe   {["a","b","c"]:: [[4,5,6],[7,8,9],[10,11,12]]}
+""     string      "Hi programmer!"
+^""    fstring     ^"Hello {name}"
+''     regex       '\d+'          // regex matching "42069"
+^''    fregex      ^'_*{name}_*'  // regex matching _____me____
+!_|_   logex       4&(!100|400)   // logical universe encapsulation
+[_+_]  pattern     [_,_+1]        // pattern for consecutive pairs
+{_:_}  map         {_<0: -1, _>0: +1, _: 0}     // implements signum
+<>     empty       {} ~= <>       // matches to anything "empty"
 ```
 Sections to be added—
 1. Lists, rings, and sets
 2. Ranges and Intervals
+
+1. Explain lists, sets, and tuples. Same as Python
+2. Rings (and why they are useful, including endless indexing, circular buffers, mathematics, card games, etc.)
+3. Ranges and intervals, and how to combine them
+4. Indexing with ranges and intervals, indexing with lists too
+5. Dictionaries (ordered rules, and much more) (when will elementwise zip dictionaries be shown??)
+6. Matrices and Dataframes. How to index them too!!
+7. Strings and regexes, fstrings and fregexes
+8. Empty
+9. Note to address logexes, patterns, and maps LATER
 
 #### Numeric Types, Constants, Built-ins
 ```
@@ -107,6 +119,11 @@ Arithmetic is like Julia, but also features a root operator.
 ^/  root       3^/125 == 5     ^/100 == 10
 \   ldivide    Ax = b   ==>    x = A\b     // Also for quotients?? Or class-defining operators?
 ```
+
+1. Introduce obvious operator usage, ^ for exponent instead of **. Mention unary / for reciprocal.
+2. ^/ for root
+3. ldivide (ala Julia)
+4. \ also used to escape newlines in long statements chaining stuff (although trailing dot is fine?)
 
 #### String Arithmetic
 String arithmetic is partly inspired by Julia, with many other features. All operations here apply to regexes too.
@@ -146,6 +163,9 @@ Pattern Operations
 4. Convenient remainder shortcut and why it's useful. Compare to / usage.
 5. Awesome bag `{+*-<.+words}` example (likely shown much, much later) WHERE IS UNPACKING IN THIS?
 
+At some point, the discussion of how strings differ from lists by being treated as scalars unless explicitly split up :)
+Scalars vs Collections (group,set,etc.)
+
 #### Comparators
 
 ```csharp
@@ -165,8 +185,8 @@ Pattern Operations
 
 1. Introduce familiar == != < <= > >= operators as perfectly normal
 2. Divisibility shortcuts, almost exclusively used numerically to replace n%m==0 as n%%m.
-3. Make clear that == checks the value and can differ across structures where '' == "" and 0x1f == 31
-4. Equivalence === checks the object identify, so '' !== "" for instance. (differently ordered dicts fall in this category, ^"" !== "")
+3. Make clear that == checks the value and can differ across structures where `'' == ""` and `0x1f == 31` and `[1:5] == [1,2,3,4,5]`
+4. Equivalence === checks the object identify, so '' !== "" for instance. (differently ordered dicts fall in this category, `^"" !== ""`)
 5. Matching operator ~= used to compare likeness. The following matches matter most
    `[} != [}, "" ~= '', {}|""|'' ~= <>, 0 ~= false, 5 ~= true`
 6. 
@@ -245,11 +265,12 @@ $   subset/subsequence
 2. Complement needs a whole intro. Show every data structure as complement (range, interval, regex, probability)
 3. Wondering if:  ~<> == (::)  // udderly unbounded
 4. Transpose needs a similar intro. Show each data structure (matrix, vector, nested list, dataframe, dictionary (cool part))
-5. Tulip & Umbrella (sorting) made simple. Also show usage in dataframes `Users[~<"length"]` `Users["last"=='Wu'|'Kim']`
+5. Tulip & Umbrella (sorting) made simple. Also show usage in dataframes `Users{~<"length"}` `Users{"last"=='Wu'|'Kim'}`
    Make cool parallel with .<=(~<X) and .>=(~>X) and monotonicity (hence scans & reductions need to come first)
 7. Usage of hotdog for rotation <~>. Unary <~>X rotates rightward once.
 8. Using ->> to shape objects (lists->>lists, matrices->>matrices, str->>list, dict->>dict)
-9. Zip examples shown simply, alongside Python. Recall that it deletes stuff
+9. Zip examples shown simply, alongside Python. Recall that it deletes unmatched pairs/triplets/etc.
+10. Using cosmos for dot-product and polynomial operations. Possibility of `.+*L` for indefinitely flattening lists (diff from .++)
 
 
 WHERE IS INDEXING RULES IN ALL OF THIS??? INDEXING BY INTERVALS TOO?? `list[*indices] == list[indices]` as well and `list{**map} == list{map}`
@@ -263,17 +284,44 @@ COLLECT QUOTES FROM EVERYTHING AND REFERENCE THEM
 <==>  outer join
 <<>>  disjoint
 ```
+1. Introduce main cast of relational operators
+2. Compare directly to SQL but using Nodan code examples
+3. Explore using specialized joining operators like >>=> <<=< >><< (crossjoin) and so on.
+4. ???
 
 #### Functional Operators
 ```csharp
-:=  define
-=>  as/map
+:=  map
 =:  filter
+_   placeholder
+:   ifmap 
+=>  domap/default/sword
+[)  indices
+[]  keys
+{}  values
+[}  indices from values
 #   compose
 -*  wand
 :=: dogbone
 .:  grapevine
 ```
+
+1. Outline the purpose of map-filter-reduce and why it's a powerful construct
+2. Show examples using explicit map (:=) and filter (=:) examples
+3. Show underscore examples and implicit K{<0} like examples
+4. Show K{+=1} examples for maps (and how := or = can be used in maps)
+5. Show the difference between if-maps (:) and do-maps (=>) with `str{'\w+'=>" "}` example. Maybe also show ?: example
+6. Explain how `{}` filter on values, `[]` filter on keys/indices, and `[}` gets indices/keys from values. 
+7. At some point explain all the `[), [], {}` shortcuts.
+8. Use the compose operator in a few examples (dot included?)
+9. Explain the wand operator, and how it's used for `-*=` and to evade precedence rules.
+10. Dogbone `:=:` for complex dictionary mapping scenarios (harderts to write)
+11. Using grapevine for groupby `.:` similar to uses for ~< and ~>. Explain string literal shortcuts for filtering values.
+^^ Perhaps this should go before ~< and ~> for this very reason, since filtering wasn't covered yet
+
+This section is a great segway into map and filter objects, which should be addressed next.
+
+LINK +=> it's dangerous to go alone (logos in there?) Perhaps a meme!
 
 ## LOGIC
 
@@ -283,7 +331,8 @@ COLLECT QUOTES FROM EVERYTHING AND REFERENCE THEM
 &&  and
 ||  or
 ```
-Each of these coerce non-booleans into boolean values. `?3 == true` 
+Each of these coerce non-booleans into boolean values. `?3 === true` 
+Not much else to see here. Maybe precedence levels?
 
 #### Logex Operators
 ```csharp
@@ -296,7 +345,16 @@ Each of these coerce non-booleans into boolean values. `?3 == true`
 <-> iff
 ```
 
-Since !° is a combinator, you can use it on 
+Since !° is a combinator, you can use it on other operators...
+
+1. Using ! for logical negation. The object is negated, which leads to interesting scenarios like !2 == 3  same as 2 != 3
+2. !° is a combinator so can be used on !@ or !$ to negate evaluations
+3. Introduce & and | (obvious). Show examples of what logexes do. Emphasize no coercion of booleans.
+4. Nor !! (mention that !| and !& are valid, but to be avoided due to bugs caused by &! and |! permutations)
+5. xor >< and iff <-> (xnor) use cases
+6. Then -> interesting uses
+7. Leap Year example. Show how it reduces. bools reduce, but nothing else.
+8. Logexes reducing against one another... Explain the elementwise concerns
 
 #### Metalogic Operators
 ```csharp
@@ -304,7 +362,9 @@ Since !° is a combinator, you can use it on
 ==> entail/imply
 >=< nonequivalent
 ```
-
+1. Explain what metalogic means and why these are necessary
+2. DeMorgan's Law and 1&2 ==> 1|2 examples
+3. How candybar A >=< B differs from spaceship A <=> !B
 
 #### Bitwise Operators
 ```js
@@ -316,6 +376,9 @@ Since !° is a combinator, you can use it on
 <<< lshift
 ```
 
+1. Note that bitwise is the most different from other languages
+2. /\ and \/ like logical symbols, >-< to mirror ><
+3. Shifts have 1 extra character
 
 
 #### Procedural Operators
@@ -327,6 +390,13 @@ Since !° is a combinator, you can use it on
 ?:  ternary       (?: !: try except)
 ```
 
+1. Explain how ifs don't use keywords, |: does double if (and why)
+2. ><: else symtax
+3. for loop, while loop, infinite loop (::)
+4. Semicolon ;
+5. Pass/break/continue
+6. ?: ternary operator, coalesce too?
+
 #### Combinators
 ```csharp
 !°  not
@@ -335,6 +405,12 @@ Since !° is a combinator, you can use it on
 .°  reduce/elementwise
 [°] scan
 ```
+
+1. !° combinators !@ and !$
+2. ==: @: >=:
+3. =:
+4. +:
+5. 
 
 #### Alternators
 ```csharp
