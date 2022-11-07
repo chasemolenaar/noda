@@ -91,6 +91,8 @@ Ranges `[:)` are iterables which generate lists, often used for slicing. Use bra
 ![image](https://user-images.githubusercontent.com/84992695/200396390-b1cc877c-803d-45de-864b-5d8a91acc4f0.png)
 ![image](https://user-images.githubusercontent.com/84992695/200396524-b24a112d-ccd1-400c-a872-55775bbea1fe.png)
 
+<img src="https://user-images.githubusercontent.com/84992695/200396390-b1cc877c-803d-45de-864b-5d8a91acc4f0.png" width="24">
+
 
 Sections to be added—
 1. Lists, rings, and sets
