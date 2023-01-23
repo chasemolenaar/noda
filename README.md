@@ -24,31 +24,24 @@ Let `°` represent any operator, `//` and `/* */` enclose comments, code compari
 block of code example?
 ```
 
-Does this `x` work?
+OPERATOR OVERVIEW—
 
 ```csharp
-(<<,at)(L,n,i):= [*L[:i),n,*L(:i]]
-
-// comment test
-/* multiline comment test */
-// /* */
-? && || ! & | !! >< -> <-> <=> ==> >=< (!& and !| &!)
-~~ /\ \/ >-< >>> <<< 
-+ - * / ^ % ^/ ^! \
-= °= := ::= =< ?? 
-== != > < >= <= ~= !~ %% !% === !== 
--< +< <> -*
-?: !: ?. !. : |: ><: :: ; ;;
-# @ $ >-> <-< 
-, << >> ++ -- \\ ** ^^
-% ~ ` ~> ~< <~> ->> ,, +* =*
->==< >==> <==< <==> <<>> (>>=> <<=< >><<)
-: => := =: :=: .:
-!° °= °=> °: °:: ~° .° .~° [°] 
-+- -+ °,° °|° °&° 
-true false null *> +>
-[] {} [} [) ()
-^^ WE need a precedence table for this shit
+Arithmetic:    + - * / \ ^ % ^/ !!
+Assignment:    = °= := ::= =< :=:
+Conditional:   : ><: ?: :: ;;
+Comparison:    > < >= <= %% !% /\ \/ 
+Equivalence:   == != === !==
+String:        -< +< >-< ~= !~
+Array:         ++ -- ** ^^ \\ << >> ,,
+Membership:    # @ $ >-> <-<
+Modifiers:     +* -* ~ <~> ->> +>
+Boolean:       ? ?? && ||
+Logic:         ! & | >< -> <->
+Metalogic:     <=> ==> >=<
+Forks:         +- -+ °,° °&° °|°
+Combinator:    !° .° ~° <>° [°] °:
+Relational:    ~< ~> >==< >==> <==< <==>
 ```
 #### Core Ideas
 1. Noda
