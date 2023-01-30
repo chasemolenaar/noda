@@ -26,7 +26,7 @@ block of code example?
 
 OPERATOR OVERVIEW—
 
-```csharp
+```js
 Arithmetic:    + - * / \ ^ % ^/ !!
 Assignment:    = °= := ::= =< :=:
 Conditional:   : ><: ?: :: ;;
