@@ -26,24 +26,28 @@ block of code example?
 
 OPERATOR OVERVIEW—
 
-```js
-Arithmetic:    + - * / \ ^ % ^/ !!
-Assignment:    = °= := ::= =< :=:
-Conditional:   : ><: ?: :: ;;
-Comparison:    > < >= <= %% !% /\ \/ 
-Equivalence:   == != === !== =:=
-String:        -< +< >-< ~= !~
-Array:         ++ -- ** ^^ \\ << >> ,,
-Membership:    # @ $ >-> <-<
-Modifiers:     +* -* ~ <~> ->> +>
-Boolean:       ? ?? && ||
-Logic:         ! & | >< -> <->
-Metalogic:     <=> ==> >=<
-Forks:         +- -+ °,° °&° °|° ?°
-Combinator:    !° .° ~° <>° [°] °:
-Relational:    ~< ~> >==< >==> <==< <==>
-```
-\*The degree symbol `°` is used to indicate *any* operator.
+[](#table-of-contents)
+| Family | Operators |
+| ------ | --------- |
+| Arithmetic | `+ - * / \ ^ % ^/ !!`
+| Assignment | `= °= := ::= =< => :=:`
+| Conditional | `: ><: ?: :: ;;`
+| Comparison | `> < >= <= %% !% /\ \/` 
+| Equivalence | `== != === !== =:=`
+| String | `-< +< >-< ~= !~`
+| Array | `++ -- ** ^^ \\ << >> ,,`
+| Membership | `# @ $ >-> <-<`
+| Modifiers | `+* -* ~ <~> ->> +> ::`
+| Boolean | `? ?? && \|\|`
+| Logic | `! & \| >< -> <->`
+| Metalogic | `<=> ==> >=<`
+| Forks | `+- -+ °,° °&° °\|° ?°`
+| Combinator | `!° .° ~° <>° [°] °:`
+| Relational | `~< ~> >==< >==> <==< <==>`
+
+\*The degree symbol `°` is used to indicate \[*insert any operator*\].
+
+RANK POLYMORPHISM
 
 #### Core Ideas
 1. Noda
@@ -57,23 +61,17 @@ This tutorial assumes you know some Python....
 3. 
 
 #### Basic Data Structures
-```csharp
-()     tuple       (1,2,3,4)        // similar to list
-{}     set         {1,2,3,4}        // unordered
-[}     ring        [1,2,3,4,5}      // loops on itself
-[]     array       [1,2,3,4,5]      // standard list/array
 
-[:)    slice       [1:4)            // like range(1,4)
-{:}    dict/df     {"a": 1, "b": 2} // dict == dataframe
+[](#table-of-contents)
+| empty | type | instance | notes |
+| ----- | ---- | -------- | ----- |
+| `()` | tuple | `(1,2,3,4)` | immutable list
+| `{}` | set | `{1,2,3,4}` | unordered
+| `[}` | ring | `[1,2,3,4,5}` | loops on itself
+| `[]` | array | `[1,2,3,4,5]` | n-dimensional array
+| `:` | slice | `1:4` | like range(1,4)
+| `{}` | dict | `{"a": 1, "b": 2}` | dict and dataframe
 
-""     string      "Hi programmer!" // regular string
-''     regex       '\d+'            // regex matching "42069"
-
-!_|_   logex       4&(!100|400)     // logical universe encapsulation
-[_+_]  pattern     [_,_+1]          // pattern for consecutive pairs
-{_:_}  map         {_%%2: "even"}   // like dict, but pattern-matching
-<>     empty       {} ~= <>         // matches to anything "empty"
-```
 Sets `{}` and tuples `()` behave similarly to Python——sets are unordered, tuples are immutable. Rings `[}` are like lists, but loop back on themselves and can be indexed anywhere: `[0,1,2,3}[4] == [0,1,2,3}[0] == 0`. Slices are denoted with `a:b` and are inclusive by default: `1:4 == 1,2,3,4`. To enforce exclusivity, use brackets `[]` for inclusive, parens `()` for exclusive: 
 ```csharp
 [1:4] == [1,2,3,4]   // inclusive / inclusive
@@ -107,25 +105,77 @@ df[:,:3]
       "assists":  [ 11, 8,  10, 6 ]}
 ```
 
-#### Strings
-```csharp
-""    string      "Hi {name}!"   // All strings are fstrings
-''    regex       '\d+'          // Matches "42069"
-``    raw         `"wow!" ''`    // 
-```
-All strings are fstrings. If braces `{}` are desired in a string, escape them using `\{\}` or use raw strings ````{raw}````. Regexes patterns use apostrophes, and work according to [insert standard]. 
+#### Arithmetic
 
-```csharp
-*   concat    "wind" * "fall" == "windfall"
-^   repeat    "no" ^ 4 == "nononono"
-/   remove    "workmanship" / "kman" == "worship"
-\   before    "try-method-x" \ "method" == "try-"
-%   remainder "try-method-x" % "method" == "-x"
--<  split     "2/14/23" -< "/" == ["2","14","23"]     
-+<  snip      "2/14/23" +< "/" == ["2/","14/","23"]
->-< join      ["a","b","c"] >-< ":" == "a:b:c"
-```
-Multiplication does 
+[](#table-of-contents)
+| op  | name | instance | notes |
+| `+` | plus  | `2 + 3 == 5` | addition
+| `-` | minus | `2 - 3 == -1` | subtraction
+| `*` | times | `2 * 3 == 6` | multiplication
+| ` ` | coef  | `9n == 9 * n` | literal numeric coefficients
+| `/` | divide | `3 / 6 == 0.5` | division
+| `\` | floordiv | `11 \ 5 == 2` | floor division
+| `%` | modulo | `11 % 5 == 1` | modulo remainder
+| `^` | power | `2 ^ 3 == 8` | exponent
+| `^/`| root | `3^/125 == 5` | nth root of number
+| `!!`| choose | `4!!2 == 6` | n-choose-k / factorial
+
+Unary plus `+` and minus `-` are supported, and convert strings into ints/floats: `+"123" == 123`. Literal multiplication applies to juxtaposed functions: `f(x)g(x) == f(x)*g(x)`. Unary root `^/` computes the square root: `^/36 == 6`. On arrays, times `*`, division `/`, and power `^` are matrix operations. Likewise, floordiv `\` becomes left divide, handy for solving equations like `Ax = B` using `x = A\B`. As a binary operator, `!!` yields n-choose-k, but in front of a number gives factorials: `!!4 == 24`. Factorials of floats return the Gamma function `Γ(n-1)`.
+
+#### Comparison
+
+[](#table-of-contents)
+| op  | name | instance | notes |
+| `>` | greater | `3 > 2` | greater than
+| `<` | less | `2 < 3` | less than
+| `>=` | greater/equal | `3 >= 2` | greater or equal
+| `<=` | less/equal  | `2 <= 3` | less or equal
+| `==` | equal | `1 == 1.0` | equality (of value)
+| `!=` | unequal | `1 != 1.5` | inequality (of value)
+| `%%` | divisible | `20 %% 5` | remainder is 0
+| `!%` | indivisible | `23 !% 5` | remainder is !0
+| `===`| equivalence | `1.0 === 1.0` | same objects
+| `!==`| inequivalence | `1 !== 1.0` | different objects
+
+Greater and less operators can be used on strings for lexical value comparison: `"apple" < "banana"`. Equivalence `===` compares the same address (same as Python's `is` keyword).
+
+#### Strings
+[](#table-of-contents)
+| empty | type | instance | notes |
+| ----- | ---- | -------- | ----- |
+| `""` | string | `"Hi {name}!"` | All strings are fstrings
+| `''` | regex | `'\d+'` | Matches "42069"
+| ``` `` ``` | raw | ``` `"wow!"\\''` ``` | No escape sequences
+
+All strings are fstrings. If braces `{}` are desired in a string, escape them using `\{\}` or use raw strings ````{raw}````. Regexes patterns use apostrophes, and work according to \[insert standard\]. Multiline strings can be written using triple quotes `"""` on either side of text.
+
+[](#table-of-contents)
+| operator | name | instance | notes |
+| `*`  | concat    |`"wind" * "mill" == "windmill"`         | concatenates strings
+| `^`  | repeat    |`"no" ^ 4 == "nononono"`                | repeats string
+| `/`  | remove    |`"workmanship" / "kman" == "worship"`   | removes substring everywhere
+| `\`  | before    |`"try-method-x" \ "method" == "try-"`   | retains text before substring
+| `%`  | remainder |`"try-method-x" % "method" == "-x"`     | retains text after substring
+| `-<` | split     |`"2/14/23" -< "/" == ["2","14","23"]`   | splits on pattern (remove delimiter)
+| `+<` | snip      |`"2/14/23" +< "/" == ["2/","14/","23"]` | snips on pattern (keep delimiter)
+| `>-<`| join      |`["a","b","c"] >-< ":" == "a:b:c"`      | joins strings by delimiter
+
+Literal concatenation of strings is valid: `"wind""mill" == "windmill"`. Use a tuple as the right argument to limit string operations to n-times: `"split, me, up" -< (", ", 1) == ["split", "me, up"]`. Unary `-<` splits on whitespace: `-<"Jane\n S Smith" == ["Jane", "S", "Smith"]`. Unary `>-<` joins without space: `>-<["a","b","c"] == "abc"`. Join `>-<` lists together too: `["Okay", "but", "why"] >-< [", ", " ", "?"] == "Okay, but why?"`.
+
+//regex match operators? `~=` and `!~`?
+
+#### Array/Setwise
+
+[](#table-of-contents)
+| op | name | instance | notes |
+| `++` | union | `[1,2] ++ [3,4] == [1,2,3,4]` | concatenates 2 arrays
+| `--` | difference | `[1,2,3,4] -- [2,4] == [1,3]` | removes each item from 1st array
+| `**` | intersection | `[1,2,3,4] ** [3,4,5,6] == [3,4]` | returns shared items
+| `^^` | symmetric difference | `[1,2,3,4] ^^ [3,4,5,6] == [1,2,5,6]` | 
+| `\\` | remove | `[1,2,3,4] \\ 3 == [1,2,4]` |
+| << >> ,,`
+| Membership | `# @ $ >-> <-<`
+
 
 #### Examples
 ```csharp
@@ -137,9 +187,14 @@ entitle(str):=
 entitle("world records book")
 >>>   "World Records Book"
 
-progress_dots(percent):=
-   "🔵"^10(1-percent) * "⚪"^10percent
+progress_dots(percent):= "🔵"^10percent * "⚪"^10(1-percent)
+   
+progress_dots(0.8)
+>>>   "🔵🔵🔵🔵🔵🔵🔵🔵⚪⚪"
 
+prime_counter(P):= #[2:P]{.!|(_%%[2:_))}
+
+pascal(n):= [:n]!![:[:n]]
 ```
 
 
@@ -188,19 +243,7 @@ e     Euler's     2.71828...  // constant
 
 
 
-#### Arithmetic
-Arithmetic is like Julia, but also features a root operator.
-```csharp
-+   plus       2 + 3 == +5
--   minus      2 - 3 == -1
-*   times      2 * 3 == 6
-°   coef       9​n == 9 * n
-/   divide     3 / 6 == 0.5    /4 == 1/4 == 0.25
-^   exponent   2 ^ 3 == 8
-%   modulus    27 % 13 == 1
-^/  root       3^/125 == 5     ^/100 == 10
-\   ldivide    Ax = b   ==>    x = A\b     // Also for quotients?? Or class-defining operators?
-```
+
 
 1. Introduce obvious operator usage, ^ for exponent instead of **. Mention unary / for reciprocal.
 2. ^/ for root
