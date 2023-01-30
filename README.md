@@ -25,11 +25,11 @@ OPERATOR OVERVIEW—
 [](#table-of-contents)
 | Family | Operators |
 | ------ | --------- |
-| Arithmetic | `+ - * / \ ^ % ^/ !!`
+| Arithmetic | `+ - * / \ ^ % ^/ !! /\ \/`
 | Assignment | `= °= := ::= =< => :=:`
 | Conditional | `: ><: ?: :: ;;`
-| Comparison | `> < >= <= %% !% /\ \/` 
-| Equivalence | `== != === !== =:=`
+| Comparison | `> < >= <= %% !%` 
+| Equivalence | `== != === !==`
 | String | `-< +< >-< ~= !~`
 | Array | `++ -- ** ^^ \\ << >> ,,`
 | Membership | `# @ $ >-> <-<`
@@ -116,6 +116,8 @@ df[:,:3]
 | `^` | power | `2 ^ 3 == 8` | exponent
 | `^/`| root | `3^/125 == 5` | nth root of number
 | `!!`| choose | `4!!2 == 6` | n-choose-k / factorial
+| `/\`| max | `4 /\ 5 == 5` | maximum value
+| `\/`| min | `4 \/ 5 == 4` | minimum value
 
 Unary plus `+` and minus `-` are supported, and convert strings into ints/floats: `+"123" == 123`. Literal multiplication applies to juxtaposed functions: `f(x)g(x) == f(x)*g(x)`. Unary root `^/` computes the square root: `^/36 == 6`. On arrays, times `*`, division `/`, and power `^` are matrix operations. Likewise, floordiv `\` becomes left divide, handy for solving equations like `Ax = B` using `x = A\B`. As a binary operator, `!!` yields n-choose-k, but in front of a number gives factorials: `!!4 == 24`. Factorials of floats return the Gamma function `Γ(n-1)`.
 
@@ -165,6 +167,22 @@ Literal concatenation of strings is valid: `"wind""mill" == "windmill"`. Use a t
 
 Match operators `~=` and `!~` check whether a regex pattern matches a string. 
 
+#### Assignment
+[](#table-of-contents)
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `=` | assign | `x = 1` | stores value of 1 for x
+| `?=` | initialize | `count ?= 0` | assigns count to 0 if null or nonexistent
+| `°=` | reassign | `x += 1` | adds 1 to current value of x
+| `=<` | vacuum | `a =< b[:2]` | pops slice from b and assigns it to a
+| `:=:` | swap | `a :=: b` | swaps the values of a and b ((a,b) = (b,a))
+| `:=` | define | `add(x,y):= x + y` | function definition
+| `::=` | class | `Person::= ...` | class definition
+
+Unary vacuum `=<` deletes a slice of a collection: `=<dict["names"]` deletes the key `"names"` from `dict`. Define `:=` can be used on variables (not just functions), thereby creating dependent variables / properties; in `y := x^2 -2`, y is linked to x, and if x changes, y will be updated with the current value. In a broader sense, define `:=` is used like Prolog's logical implcation `:-` operator (as you will see). The last expression in a function returns.
+
+(show examples of classes using `::=`)
+
 #### Array/Setwise
 
 [](#table-of-contents)
@@ -181,6 +199,19 @@ Match operators `~=` and `!~` check whether a regex pattern matches a string.
 
 `12>>34 == 1234`
 Should `,;` be used here?
+
+#### Modifiers
+
+[](#table-of-contents)
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `~` | complement | `~[3:] == [:3)` | complement slice / regex
+| `<~>` | rotate | `[1,2,3,4] <~> 1 == [2,3,4,1]` | rotates array n-times
+| `->>` | reshape | `[1:4] ->> [2,2] == [[1,2],[3,4]]` | reshapes array by dimensions
+| `+>` | repeat | `[0,1] +> 3 == [0,1,0,1,0,1]` | concats array to itself n-times
+| `::` | rank | `.+matrix::1` | sums matrix according to column = 1
+
+Unary rotate `<~>` reverses an array/string: `<~>[1,2,3] == [3,2,1]; <~>"live" == "evil"`. Rank `::` is identical to it's usage in other array languages like APL and J. 
 
 #### Membership
 
@@ -264,10 +295,10 @@ Should `,;` be used here?
 | `.°` | inner | `[1,2] .* [3,4] == [3,8]` | inner product
 | `<>°` | outer | `[1,2] <>+ [0,10] == [[1,2],[11,12]]` | outer sum
 | `~°` | swap | `a ~* b == b * a` | swaps operator order / associativity
-| `[°]` | scan | `2+\|*3 == (2+3)\|(2*3) == 5\|6` | branches along operator choices
-| `°:` | identity | `[1+:2] == [1:3]` | increments length by difference
+| `[°]` | scan | `[+][1,2,3,4] == [1,3,6,10]` | scans along axis applying operator
+| `°:` | increment | `[1+:2] == [1:3]` | increments length by difference
 
-
+Unary `.°` does reductions. So `.+` is a sum: `.+[1,2,3] == 6`. `.==` checks whether every element is equal: `.==[1,1,1,1] == true`. 
 
 
 #### Examples
@@ -287,13 +318,13 @@ progress_dots(0.8)
 
 prime_counter(P):= #[2:P]{.!|(_%%[2:_))}
 
-pascal(n):= [:n]!![:[:n]]
+pascal_triangle(n):= [:n]!![:[:n]]
 
 diff(g):= .+(2g-1)::0 <>+ .+(2g-1)::1
 
 pluralize(word):= word * ("ch"|"sh"|"s"|"x"|"z"<-<word ? "es" : "s")
 
-liebniz = .+-4/[1:2:]
+liebniz_pi = .+-4/[1:2:]
 e = .+/!![0:]
 
 leap_year(yr):= yr %% 4&(!100|400)
