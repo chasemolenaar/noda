@@ -31,7 +31,7 @@ Arithmetic:    + - * / \ ^ % ^/ !!
 Assignment:    = °= := ::= =< :=:
 Conditional:   : ><: ?: :: ;;
 Comparison:    > < >= <= %% !% /\ \/ 
-Equivalence:   == != === !==
+Equivalence:   == != === !== =:=
 String:        -< +< >-< ~= !~
 Array:         ++ -- ** ^^ \\ << >> ,,
 Membership:    # @ $ >-> <-<
@@ -39,10 +39,12 @@ Modifiers:     +* -* ~ <~> ->> +>
 Boolean:       ? ?? && ||
 Logic:         ! & | >< -> <->
 Metalogic:     <=> ==> >=<
-Forks:         +- -+ °,° °&° °|°
+Forks:         +- -+ °,° °&° °|° ?°
 Combinator:    !° .° ~° <>° [°] °:
 Relational:    ~< ~> >==< >==> <==< <==>
 ```
+\*The degree symbol `°` is used to indicate *any* operator.
+
 #### Core Ideas
 1. Noda
 
@@ -56,30 +58,93 @@ This tutorial assumes you know some Python....
 
 #### Basic Data Structures
 ```csharp
-[]     list        [1,2,3,4,5]      // standard list/array
 ()     tuple       (1,2,3,4)        // similar to list
 {}     set         {1,2,3,4}        // unordered
 [}     ring        [1,2,3,4,5}      // loops on itself
+[]     array       [1,2,3,4,5]      // standard list/array
 
-[:)    range       [1:4) == [1,2,3] // range(1,4)
-[::)   interval    [2::6)           // [2,6) in math, excludes 6
-[;]    matrix      [1 2; 3 4]       // 2-dimensionsal data structure
-{:}    dict        {"a": 1, "b": 2, "c": 3}
-{::}   dataframe   {["a","b","c"]:: [[4,5,6],[7,8,9],[10,11,12]]}
+[:)    slice       [1:4)            // like range(1,4)
+{:}    dict/df     {"a": 1, "b": 2} // dict == dataframe
 
 ""     string      "Hi programmer!" // regular string
-^""    fstring     ^"Hello {name}"  // f"Hello {name}" equivalent
 ''     regex       '\d+'            // regex matching "42069"
-^''    fregex      ^'_*{name}_*'    // regex matching "___me___"
 
 !_|_   logex       4&(!100|400)     // logical universe encapsulation
 [_+_]  pattern     [_,_+1]          // pattern for consecutive pairs
 {_:_}  map         {_%%2: "even"}   // like dict, but pattern-matching
 <>     empty       {} ~= <>         // matches to anything "empty"
 ```
-Lists `[]`, sets `{}`, and tuples `()` behave similarly to Python. Lists are ordered, sets are not, tuples are immutable. 
-Rings `[}` are similar to lists, but they loop back on themselves and can be indexed anywhere: `[0,1,2,3}[4] == [0,1,2,3}[0] == 0`
-Ranges `[:)` are iterables which generate lists, often used for slicing. Use brackets `[`,`]` for inclusive, parens `(`,`)` for exclusive: `[1:4] == [1,2,3,4]`/`[1:4) == [1,2,3]`/`(1:4] == [2,3,4]` (doubly exclusive parens `(1:4)` is not supported). Omit one of the numbers to start at 0 or indicate an infinite range: `[:3] == [0,1,2,3]`/`(:3] == [1,2,3]`/`[0:] == [0,1,2..]`. {insert image here from presentation on ranges}. {mention linspace and stepwise}. 
+Sets `{}` and tuples `()` behave similarly to Python——sets are unordered, tuples are immutable. Rings `[}` are like lists, but loop back on themselves and can be indexed anywhere: `[0,1,2,3}[4] == [0,1,2,3}[0] == 0`. Slices are denoted with `a:b` and are inclusive by default: `1:4 == 1,2,3,4`. To enforce exclusivity, use brackets `[]` for inclusive, parens `()` for exclusive: 
+```csharp
+[1:4] == [1,2,3,4]   // inclusive / inclusive
+[1:4) == [1,2,3]     // inclusive / exclusive
+(1:4] == [2,3,4]     // exclusive / inclusive
+(1:4) == [2,3]       // exclusive / exclusive
+[:3] == [0,1,2,3]    // slices start at 0
+(:3] == [1,2,3]      // exclusive of 0
+[0:] == [0,1,2..]    // infinite slice
+[1:2:7] == [1,3,5,7] // start:step:end
+[1:2:] == [1,3,5..]  // odd numbers
+[:2:] == [0,2,4..]   // even numbers
+```
+All arrays/lists `[]` are n-dimensional arrays, and mimic the conventions of Numpy/Pytorch/Tensorflow. Likewise, all dicts are dataframes and mimic many of the conventions of Pandas. Both may be indexed along each dimension:
+```
+X = [[1,2,3],[4,5,6]]
+X[1]                     // 2nd row
+>>>      [4,5,6]           
+X[:,0]                   // 1st column
+>>>      [[1],[4]]      
+X[:,0:1]                 // 1st & 2nd column
+>>>      [[1,2],[4,5]]  
+
+df = {"team":    ["A","A","A","A","B","B","B","B"]
+      "points":  [ 5,  7,  7,  9,  12, 9,  9,  4 ]
+      "assists": [ 11, 8,  10, 6,  6,  5,  9,  12]}
+
+df[:,:3]    
+      {"team":    ["A","A","A","A"]
+      "points":   [ 5,  7,  7,  9 ]
+      "assists":  [ 11, 8,  10, 6 ]}
+```
+
+#### Strings
+```csharp
+""    string      "Hi {name}!"   // All strings are fstrings
+''    regex       '\d+'          // Matches "42069"
+``    raw         `"wow!" ''`    // 
+```
+All strings are fstrings. If braces `{}` are desired in a string, escape them using `\{\}` or use raw strings ````{raw}````. Regexes patterns use apostrophes, and work according to [insert standard]. 
+
+```csharp
+*   concat    "wind" * "fall" == "windfall"
+^   repeat    "no" ^ 4 == "nononono"
+/   remove    "workmanship" / "kman" == "worship"
+\   before    "try-method-x" \ "method" == "try-"
+%   remainder "try-method-x" % "method" == "-x"
+-<  split     "2/14/23" -< "/" == ["2","14","23"]     
++<  snip      "2/14/23" +< "/" == ["2/","14/","23"]
+>-< join      ["a","b","c"] >-< ":" == "a:b:c"
+```
+Multiplication does 
+
+#### Examples
+```csharp
+entitle(str):=
+   str -<= " "
+   str >>= [upper(_[0])_[1:)]
+   str >-< " "
+   
+entitle("world records book")
+>>>   "World Records Book"
+
+progress_dots(percent):=
+   "🔵"^10(1-percent) * "⚪"^10percent
+
+```
+
+
+//Literal Multiplication  f()g()
+
 
 ![image](https://user-images.githubusercontent.com/84992695/200396390-b1cc877c-803d-45de-864b-5d8a91acc4f0.png)
 ![image](https://user-images.githubusercontent.com/84992695/200396524-b24a112d-ccd1-400c-a872-55775bbea1fe.png)
