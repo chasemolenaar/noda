@@ -18,11 +18,7 @@ Explanation of awesome, terse examples, with equivalent Python and APL code to m
 We need a showcase of every oeprator's usages :)
 
 Expectations— 
-Let `°` represent any operator, `//` and `/* */` enclose comments, code comparisons to Python will be written in tandem. Nodan operators 
-
-```
-block of code example?
-```
+Let `°` represent any operator, `//` and `/* */` enclose comments, code comparisons to Python will be written in tandem (to be completed).
 
 OPERATOR OVERVIEW—
 
@@ -109,6 +105,7 @@ df[:,:3]
 
 [](#table-of-contents)
 | op  | name | instance | notes |
+| --- | ----- | ------- | ----- |
 | `+` | plus  | `2 + 3 == 5` | addition
 | `-` | minus | `2 - 3 == -1` | subtraction
 | `*` | times | `2 * 3 == 6` | multiplication
@@ -126,6 +123,7 @@ Unary plus `+` and minus `-` are supported, and convert strings into ints/floats
 
 [](#table-of-contents)
 | op  | name | instance | notes |
+| --- | ----- | ------- | ----- |
 | `>` | greater | `3 > 2` | greater than
 | `<` | less | `2 < 3` | less than
 | `>=` | greater/equal | `3 >= 2` | greater or equal
@@ -150,31 +148,126 @@ Greater and less operators can be used on strings for lexical value comparison: 
 All strings are fstrings. If braces `{}` are desired in a string, escape them using `\{\}` or use raw strings ````{raw}````. Regexes patterns use apostrophes, and work according to \[insert standard\]. Multiline strings can be written using triple quotes `"""` on either side of text.
 
 [](#table-of-contents)
-| operator | name | instance | notes |
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
 | `*`  | concat    |`"wind" * "mill" == "windmill"`         | concatenates strings
 | `^`  | repeat    |`"no" ^ 4 == "nononono"`                | repeats string
 | `/`  | remove    |`"workmanship" / "kman" == "worship"`   | removes substring everywhere
-| `\`  | before    |`"try-method-x" \ "method" == "try-"`   | retains text before substring
-| `%`  | remainder |`"try-method-x" % "method" == "-x"`     | retains text after substring
+| `\`  | before    |`"try-method-x" \ "method" == "try-"`   | retains text before 1st substring
+| `%`  | remainder |`"try-method-x" % "method" == "-x"`     | retains text after 1st substring
 | `-<` | split     |`"2/14/23" -< "/" == ["2","14","23"]`   | splits on pattern (remove delimiter)
 | `+<` | snip      |`"2/14/23" +< "/" == ["2/","14/","23"]` | snips on pattern (keep delimiter)
 | `>-<`| join      |`["a","b","c"] >-< ":" == "a:b:c"`      | joins strings by delimiter
+| `~=` | match     |`'\d+\.\d+' ~= "420.69"`                | checks if regex matches string
+| `!~` | unmatch   |`'\d+\.\d+' !~ "1_000"`                 | checks if regex doesn't match string
 
 Literal concatenation of strings is valid: `"wind""mill" == "windmill"`. Use a tuple as the right argument to limit string operations to n-times: `"split, me, up" -< (", ", 1) == ["split", "me, up"]`. Unary `-<` splits on whitespace: `-<"Jane\n S Smith" == ["Jane", "S", "Smith"]`. Unary `>-<` joins without space: `>-<["a","b","c"] == "abc"`. Join `>-<` lists together too: `["Okay", "but", "why"] >-< [", ", " ", "?"] == "Okay, but why?"`.
 
-//regex match operators? `~=` and `!~`?
+Match operators `~=` and `!~` check whether a regex pattern matches a string. 
 
 #### Array/Setwise
 
 [](#table-of-contents)
 | op | name | instance | notes |
+| -- | ----- | ------- | ----- |
 | `++` | union | `[1,2] ++ [3,4] == [1,2,3,4]` | concatenates 2 arrays
 | `--` | difference | `[1,2,3,4] -- [2,4] == [1,3]` | removes each item from 1st array
 | `**` | intersection | `[1,2,3,4] ** [3,4,5,6] == [3,4]` | returns shared items
-| `^^` | symmetric difference | `[1,2,3,4] ^^ [3,4,5,6] == [1,2,5,6]` | 
-| `\\` | remove | `[1,2,3,4] \\ 3 == [1,2,4]` |
-| << >> ,,`
-| Membership | `# @ $ >-> <-<`
+| `^^` | symmetric difference | `[1,2,3,4] ^^ [3,4,5,6] == [1,2,5,6]` | returns unshared items
+| `\\` | remove | `[1,2,3,4] \\ 1 == [2,3,4]` | removes single item
+| `<<` | append | `[1,2,3] << 4 == [1,2,3,4]` | appends single item
+| `>>` | juxtapose | `[1,2,3] >> [0,1] == [1,2,3][0,1]` | affixes right argument
+| `,,` | zip | `[1,2,3] ,, [4,5,6] == [[1,4],[2,5],[3,5]]` | zips arrays into nested arrays
+
+`12>>34 == 1234`
+Should `,;` be used here?
+
+#### Membership
+
+[](#table-of-contents)
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `#` | length | `#[1,2,3,4] == 4` | length along first axis 
+| `%` | shape | `%[[1,2,3],[4,5,6]] == [2,3]` | shape of matrix/dataframe
+| `@` | in | `1 @ [[1,2],[3,4]]` | checks if scalar exists in collection
+| `$` | subset | `[2,3] $ [1,2,3,4]` | checks if subsequence/subset exists
+| `>->` | starts | `[1,2] >-> [1,2,3,4]` | checks if subsequence is at the start
+| `<-<` | ends | `[3,4] <-< [1,2,3,4]` | checks if subsequence is at the end
+
+#### Maps & Filters
+
+[](#table-of-contents)
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `[]` | map | `[4,5,6,7][_+2] == [6,7,8,9]` | maps values + 2
+| `{}` | filter | `[4,5,6,7]{_%%2} == [4,6]` | filter even values (%% 2)
+| `()` | index | `[4,5,6,7](_>=6) == [2,3]` | indices of values (>= 6)
+| `=>` | arrow | `[1,2,3][x => x*2] == [2,4,6]` | mapping with named variable x
+| `:`  | colon | `[1,2,3,4]{_%%2: _*10} == [1,20,3,40]` | 10x even numbers
+| `?:` | cond  | `[1,2,3,4]{_%%2?: _*10} == [20,40]` | remove unmatched values
+
+#### Boolean
+
+[](#table-of-contents)
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `?` | truthy | `?0 == ?[] == false` | returns truthy/falsy values
+| `??` | existence | `??null == false` | false if null or nonexistent
+| `&&` | and | `false && true == false` | short-circuit and
+| `\|\|` | or | `false \|\| true == true` | short-circuit or
+
+// ?? is also the coalesce operator, and ?= is the initialize operator
+//1_000 T F U I o oo O 
+
+#### Logex
+
+[](#table-of-contents)
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `!` | not | `!2 == 3` | logically negates value/object
+| `&` | and | `1&2 @ [1,2,3,4]` | both 1 and 2 in array
+| `\|` | or | `0\|1 @ [1,2,3,4]` | either 0 or 1 in array
+| `!&` | nand | `0!&1 @ [1,2,3,4]` | not both 0 and 1 in array
+| `!\|` | nor | `0!|5 @ [1,2,3,4]` | neither 0 nor 5 in array
+| `><` | xor  | `0><1 @ [1,2,3,4]` | either 0 or 1 in array, but not both
+| `->` | imply | `1->2 @ [1,2,3,4]` | 1 in array implies 2 also in array
+| `<->` | iff | `1<->2 @ [1,2,3,4]` | both 1 and 2, or neither (xnor)
+
+#### Metalogic
+
+[](#table-of-contents)
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `<=>` | equivalence | `!1|!2 <=> 1!&2` | DeMorgan's Law
+| `==>` | implication | `1&2 ==> 1|2` | if both, then either is also true
+| `>=<` | inequivalence | `1&2 >=< 3|4` | different logical universes
+
+#### Forks
+
+[](#table-of-contents)
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `+-` | plus-minus | `2+-3 == 5,-1` | expands into 2 values
+| `-+` | implication | `2-+3 == -1,5` | reverse order
+| `°,°` | comma fork | `2+,*3 == 2+3,2*3 == 5,6` | branches along operator choices
+| `°&°` | and fork | `2+&*3 == (2+3)&(2*3) == 5&6` | branches along operator choices
+| `°\|°` | or fork | `2+\|*3 == (2+3)\|(2*3) == 5\|6` | branches along operator choices
+| `^` | identity | `+|^"123" == 123|"123"` | returns self
+| `?` | optional | `"word" ?|* "s" == "word"|"words"` | returns left argument
+
+#### Combinators
+
+[](#table-of-contents)
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `!°` | not | `0 !@ [1,2,3,4]` | negates membership
+| `.°` | inner | `[1,2] .* [3,4] == [3,8]` | inner product
+| `<>°` | outer | `[1,2] <>+ [0,10] == [[1,2],[11,12]]` | outer sum
+| `~°` | swap | `a ~* b == b * a` | swaps operator order / associativity
+| `[°]` | scan | `2+\|*3 == (2+3)\|(2*3) == 5\|6` | branches along operator choices
+| `°:` | identity | `[1+:2] == [1:3]` | increments length by difference
+
+
 
 
 #### Examples
@@ -195,6 +288,15 @@ progress_dots(0.8)
 prime_counter(P):= #[2:P]{.!|(_%%[2:_))}
 
 pascal(n):= [:n]!![:[:n]]
+
+diff(g):= .+(2g-1)::0 <>+ .+(2g-1)::1
+
+pluralize(word):= word * ("ch"|"sh"|"s"|"x"|"z"<-<word ? "es" : "s")
+
+liebniz = .+-4/[1:2:]
+e = .+/!![0:]
+
+leap_year(yr):= yr %% 4&(!100|400)
 ```
 
 
