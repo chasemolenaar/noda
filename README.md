@@ -115,7 +115,7 @@ df[:,:3]
 | `%` | modulo | `11 % 5 == 1` | modulo remainder
 | `^` | power | `2 ^ 3 == 8` | exponent
 | `^/`| root | `3^/125 == 5` | nth root of number
-| `!!`| choose | `4!!2 == 6` | n-choose-k
+| `!!`| choose | `4 !! 2 == 6` | n-choose-k
 | `/\`| max | `4 /\ 5 == 5` | maximum value
 | `\/`| min | `4 \/ 5 == 4` | minimum value
 
@@ -158,7 +158,8 @@ df[:,:3]
 | `!==`| inequivalence | `1 !== 1.0` | different objects
 
 * Strings do lexical value comparison: `"apple" < "banana"`
-* Equivalence `===` compares the same address (same as Python's `is` keyword).
+* All equality comparisons are elementwise on arrays: `[1,2,3] == [1,0,3]` is `[true,false,true]`
+* Equivalence `===` compares object equality *as a whole*: `[1,2,3] === [1,0,3]` is `false`
 
 #### Strings
 [](#table-of-contents)
@@ -227,7 +228,11 @@ Match operators `~=` and `!~` check whether a regex pattern matches a string.
 | `<<` | append | `[1,2,3] << 4 == [1,2,3,4]` | appends single item
 | `>>` | juxtapose | `[1,2,3] >> [0,1] == [1,2,3][0,1]` | affixes right argument
 | `,,` | zip | `[1,2,3] ,, [4,5,6] == [[1,4],[2,5],[3,5]]` | zips arrays into nested arrays
+| `::` | rank | `sum(matrix::1)` | sums matrix according to axis = 1
 
+* Union `++` performs an rbind by default (axis = 0)
+* Difference `--` removes elements by matching values
+* Intersection `**` populates an empty list/set for every item shared. Duplicates are possible.
 `12>>34 == 1234`
 Should `,;` be used here?
 
@@ -240,7 +245,6 @@ Should `,;` be used here?
 | `<~>` | rotate | `[1,2,3,4] <~> 1 == [2,3,4,1]` | rotates array n-times
 | `->>` | reshape | `[1:4] ->> [2,2] == [[1,2],[3,4]]` | reshapes array by dimensions
 | `+>` | repeat | `[0,1] +> 3 == [0,1,0,1,0,1]` | concats array to itself n-times
-| `::` | rank | `.+matrix::1` | sums matrix according to column = 1
 
 Unary rotate `<~>` reverses an array/string: `<~>[1,2,3] == [3,2,1]; <~>"live" == "evil"`. Rank `::` is identical to it's usage in other array languages like APL and J. 
 
@@ -268,7 +272,7 @@ Unary rotate `<~>` reverses an array/string: `<~>[1,2,3] == [3,2,1]; <~>"live" =
 | `:`  | colon | `[1,2,3,4]{_%%2: _*10} == [1,20,3,40]` | 10x even numbers
 | `?:` | cond  | `[1,2,3,4]{_%%2?: _*10} == [20,40]` | remove unmatched values
 
-#### Boolean
+#### Conditional
 
 [](#table-of-contents)
 | op | name | instance | notes |
@@ -278,8 +282,37 @@ Unary rotate `<~>` reverses an array/string: `<~>[1,2,3] == [3,2,1]; <~>"live" =
 | `&&` | and | `false && true == false` | short-circuit and
 | `\|\|` | or | `false \|\| true == true` | short-circuit or
 
+* Truthy/Falsy rules follow the conventions of Python
+* Existence `??` returns `false` if an error occurs (like a failed key-value reference)
+* Use `T`, `F`, `U` shorthands for `true`,`false`,`null`
 // ?? is also the coalesce operator, and ?= is the initialize operator
 //1_000 T F U I o oo O 
+
+[](#table-of-contents)
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `?:` | ternary | `if_true ? do_this : otherwise` | ternary conditional
+| `??` | coalesce | `if_not_null ?? otherwise` | returns left argument if not null
+| `:` | elif chain | `conditional: do_this` | obviates if/elif keyword
+| `><:` | else | `false \|\| true == true` | replaces else keyword
+| `==:` | switch | `variable ==: case1: do_x` | switch statement
+
+* `?:` and `??` work like they're known to in C#
+* Keywords `if`, `elif`, and `else` are all valid like in Python
+* Successive colon conditionals `:` create an if-elif chain ending with else `><:`
+```csharp
+//Keyword chain of if-elif-else
+if conditional1:     do_thing1
+elif conditional2:   do_thing2
+elif conditional3:   do_thing3
+else:                do_thing4
+
+//Implicit elif-chain semantics
+conditional1:     do_thing1
+conditional2:     do_thing2
+conditional3:     do_thing3
+><:               do_thing4
+```
 
 #### Logex
 
@@ -332,17 +365,108 @@ Unary rotate `<~>` reverses an array/string: `<~>[1,2,3] == [3,2,1]; <~>"live" =
 Unary `.°` does reductions. So `.+` is a sum: `.+[1,2,3] == 6`. `.==` checks whether every element is equal: `.==[1,1,1,1] == true`. 
 
 
-#### Examples
+### Examples
+#### Entitle String
+Task: Capitalize each word in a lowercase string.
 ```csharp
 entitle(str):=
-   str -<= " "
-   str >>= [upper(_[0])_[1:)]
-   str >-< " "
+      words = str -< " "
+      words >>= [upper(_[0])_[1:)]
+      words >-< " "
    
 entitle("world records book")
 >>>   "World Records Book"
 ```
+1. Entitle function ingests a string as its only argument
+2. Split string along space `" "`, and assign to `words`
+3. The map `[upper(_[0])_[1:)]` capitalizes 1st character, concats rest of the unaltered word
+- `"world" => upper("w")"orld" => "W""orld" => "World"`
+4. Apply map `>>` to each element of `words`, giving all capitalized words
+5. Join list of strings `words` with space `" "`
+6. Last expression of function/branch returns
+`"world records book" => ["world","records","book"] => ["World","Records","Book"] => "World Records Book"`
 
+Python (longer and messier):
+```
+def entitle(str):
+      words = str.split(" ")
+      words = [upper(w[0])+w[1:] for w in words]
+      return " ".join(words)
+```
+
+#### Leap Year
+Task: Check if year is leap year.
+Rules: A leap year is divisible by 4, not divisible by 100 unless divisible by 400. 
+```
+leap_year(yr):= yr %% 4&(!100|400)
+
+leap_year(2024)   //true
+leap_year(1900)   //false
+leap_year(2000)   //true
+```
+
+Python (clunky):
+```
+def leap_year(yr):
+      if yr % 4 == 0:
+            if yr % 400 == 0:
+                  return True
+            elif yr % 100 == 0:
+                  return False
+            else:
+                  return True
+      else:
+            return False
+```
+#### Number of Factors
+Task: Given a positive integer n, return the number of factors
+```csharp
+num_factors(n):= .+(n %% [1:n])
+
+num_factors(10)   //4 factors
+```
+Calculation for n == 10:
+```
+.+(10 %% [1:10])
+.+(10 %% [1,2,3,4,5,6,7,8,9,10])
+.+[T,T,F,F,T,F,F,F,F,T] == 4
+```
+
+Python:
+```python
+def num_factors(n):
+      return sum(n % i == 0 for i in range(1,n+1))
+```
+#### Day Number (Switch Case)
+Task: Convert number 0-6 to day of the week (string).
+```csharp
+day(num):=
+      num ==:
+            0:  "Monday"
+            1:  "Tuesday"
+            2:  "Wednesday"
+            3:  "Thursday"
+            4:  "Friday"
+            5:  "Saturday"
+            6:  "Sunday"
+            
+day(3)      //"Thursday"
+```
+
+#### Prime Divisibility
+
+#### Check If Run of Cards
+Task: Verify sequence of cards makes a valid run
+```csharp
+is_run(run):= (#run >= 4 && .==run.suit && run.card$DECK)
+```
+
+
+#### Average
+```python
+avg(xs):= .+xs/#xs                    //Noda
+def avg(xs): return sum(xs)/len(xs)   #Python
+```
 
 ```
 progress_dots(percent):= "🔵"^10percent * "⚪"^10(1-percent)
@@ -360,8 +484,6 @@ pluralize(word):= word * ("ch"|"sh"|"s"|"x"|"z"<-<word ? "es" : "s")
 
 liebniz_pi = .+-4/[1:2:]
 e = .+/!![0:]
-
-leap_year(yr):= yr %% 4&(!100|400)
 
 npv = .+(costs./(1+r)^[0:])
 
