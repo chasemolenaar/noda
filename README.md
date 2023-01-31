@@ -115,11 +115,31 @@ df[:,:3]
 | `%` | modulo | `11 % 5 == 1` | modulo remainder
 | `^` | power | `2 ^ 3 == 8` | exponent
 | `^/`| root | `3^/125 == 5` | nth root of number
-| `!!`| choose | `4!!2 == 6` | n-choose-k / factorial
+| `!!`| choose | `4!!2 == 6` | n-choose-k
 | `/\`| max | `4 /\ 5 == 5` | maximum value
 | `\/`| min | `4 \/ 5 == 4` | minimum value
 
-Unary plus `+` and minus `-` are supported, and convert strings into ints/floats: `+"123" == 123`. Literal multiplication applies to juxtaposed functions: `f(x)g(x) == f(x)*g(x)`. Unary root `^/` computes the square root: `^/36 == 6`. On arrays, times `*`, division `/`, and power `^` are matrix operations. Likewise, floordiv `\` becomes left divide, handy for solving equations like `Ax = B` using `x = A\B`. As a binary operator, `!!` yields n-choose-k, but in front of a number gives factorials: `!!4 == 24`. Factorials of floats return the Gamma function `Γ(n-1)`.
+* Times `*`, division `/`, and power `^` are matrix operations on arrays
+* Floordiv `\` becomes left divide on arrays (linear solution to `Ax = B` using `x = A\B`)
+* Reciprocal `/` returns the inverse of a square matrix 
+
+-----------------------------------------------------------------------------------------------
+
+[](#table-of-contents)
+| op  | name | instance | notes |
+| --- | ----- | ------- | ----- |
+| `+` | plus  | `+4 == 4` | positive
+| `-` | minus | `-4 == -4` | negative
+| `/` | divide | `/5 == 1/5 == 0.2` | reciprocal
+| `^/`| root | `^/36 == 6` | square root
+| `!!`| choose | `!!4 == 24` | factorial
+| `/\`| max | `/\[0,2,1] == 2` | maximum value
+| `\/`| min | `\/[0,2,1] == 0` | minimum value
+
+* Plus `+` and minus `-` convert strings into ints/floats: `+"123" == 123`
+* Juxtaposition multiplies functions: `f(x)g(x) == f(x)*g(x)`
+* Factorials of floats return Gamma function values `Γ(n-1)`
+* Max and min return the lexically greater/less string: `"apple" /\ "banana" == "banana"`
 
 #### Comparison
 
@@ -137,7 +157,8 @@ Unary plus `+` and minus `-` are supported, and convert strings into ints/floats
 | `===`| equivalence | `1.0 === 1.0` | same objects
 | `!==`| inequivalence | `1 !== 1.0` | different objects
 
-Greater and less operators can be used on strings for lexical value comparison: `"apple" < "banana"`. Equivalence `===` compares the same address (same as Python's `is` keyword).
+* Strings do lexical value comparison: `"apple" < "banana"`
+* Equivalence `===` compares the same address (same as Python's `is` keyword).
 
 #### Strings
 [](#table-of-contents)
@@ -147,7 +168,12 @@ Greater and less operators can be used on strings for lexical value comparison: 
 | `''` | regex | `'\d+'` | Matches "42069"
 | ``` `` ``` | raw | ``` `"wow!"\\''` ``` | No escape sequences
 
-All strings are fstrings. If braces `{}` are desired in a string, escape them using `\{\}` or use raw strings ````{raw}````. Regexes patterns use apostrophes, and work according to \[insert standard\]. Multiline strings can be written using triple quotes `"""` on either side of text.
+* All strings are fstrings by default
+* Escape braces using `\{` and `\}`
+* Raw strings contain no escape sequences: ```filepath = `C:\Documents\Scripts\Test.py` ```
+* Regexes patterns follow the PRCE standard (same as Python and C)
+* Multiline strings can be written without using triple quotes. Use `\` to escape newline
+* Use triple quotes `"""` to easily escape `"` from text
 
 [](#table-of-contents)
 | op | name | instance | notes |
@@ -163,7 +189,11 @@ All strings are fstrings. If braces `{}` are desired in a string, escape them us
 | `~=` | match     |`'\d+\.\d+' ~= "420.69"`                | checks if regex matches string
 | `!~` | unmatch   |`'\d+\.\d+' !~ "1_000"`                 | checks if regex doesn't match string
 
-Literal concatenation of strings is valid: `"wind""mill" == "windmill"`. Use a tuple as the right argument to limit string operations to n-times: `"split, me, up" -< (", ", 1) == ["split", "me, up"]`. Unary `-<` splits on whitespace: `-<"Jane\n S Smith" == ["Jane", "S", "Smith"]`. Unary `>-<` joins without space: `>-<["a","b","c"] == "abc"`. Join `>-<` lists together too: `["Okay", "but", "why"] >-< [", ", " ", "?"] == "Okay, but why?"`.
+* Literal concatenation of strings is valid: `"wind""mill" == "windmill"`
+* Right argument tuples limit to n-times: `"split, me, up" -< (", ", 1) == ["split", "me, up"]`
+* Unary `-<` splits on whitespace: `-<"Jane\n S Smith" == ["Jane", "S", "Smith"]`
+* Unary `>-<` joins without space: `>-<["a","b","c"] == "abc"`
+* Binary `>-<` lists together too: `["Okay", "but", "why"] >-< [", ", " ", "?"] == "Okay, but why?"`
 
 Match operators `~=` and `!~` check whether a regex pattern matches a string. 
 
@@ -179,7 +209,8 @@ Match operators `~=` and `!~` check whether a regex pattern matches a string.
 | `:=` | define | `add(x,y):= x + y` | function definition
 | `::=` | class | `Person::= ...` | class definition
 
-Unary vacuum `=<` deletes a slice of a collection: `=<dict["names"]` deletes the key `"names"` from `dict`. Define `:=` can be used on variables (not just functions), thereby creating dependent variables / properties; in `y := x^2 -2`, y is linked to x, and if x changes, y will be updated with the current value. In a broader sense, define `:=` is used like Prolog's logical implcation `:-` operator (as you will see). The last expression in a function returns.
+* Unary vacuum `=<` deletes a slice of a collection: `=<dict["names"]` deletes the key `"names"` from `dict`
+* Define `:=` can be used on variables (not just functions), thereby creating dependent variables / properties; in `y := x^2 -2`, y is linked to x, and if x changes, y will be updated with the current value. In a broader sense, define `:=` is used like Prolog's logical implcation `:-` operator (as you will see). The last expression in a function returns.
 
 (show examples of classes using `::=`)
 
@@ -259,7 +290,7 @@ Unary rotate `<~>` reverses an array/string: `<~>[1,2,3] == [3,2,1]; <~>"live" =
 | `&` | and | `1&2 @ [1,2,3,4]` | both 1 and 2 in array
 | `\|` | or | `0\|1 @ [1,2,3,4]` | either 0 or 1 in array
 | `!&` | nand | `0!&1 @ [1,2,3,4]` | not both 0 and 1 in array
-| `!\|` | nor | `0!|5 @ [1,2,3,4]` | neither 0 nor 5 in array
+| `!\|` | nor | `0!\|5 @ [1,2,3,4]` | neither 0 nor 5 in array
 | `><` | xor  | `0><1 @ [1,2,3,4]` | either 0 or 1 in array, but not both
 | `->` | imply | `1->2 @ [1,2,3,4]` | 1 in array implies 2 also in array
 | `<->` | iff | `1<->2 @ [1,2,3,4]` | both 1 and 2, or neither (xnor)
@@ -269,9 +300,9 @@ Unary rotate `<~>` reverses an array/string: `<~>[1,2,3] == [3,2,1]; <~>"live" =
 [](#table-of-contents)
 | op | name | instance | notes |
 | -- | ----- | ------- | ----- |
-| `<=>` | equivalence | `!1|!2 <=> 1!&2` | DeMorgan's Law
-| `==>` | implication | `1&2 ==> 1|2` | if both, then either is also true
-| `>=<` | inequivalence | `1&2 >=< 3|4` | different logical universes
+| `<=>` | equivalence | `!1\|!2 <=> 1!&2` | DeMorgan's Law
+| `==>` | implication | `1&2 ==> 1\|2` | if both, then either is also true
+| `>=<` | inequivalence | `1&2 >=< 3\ |4` | different logical universes
 
 #### Forks
 
@@ -310,7 +341,10 @@ entitle(str):=
    
 entitle("world records book")
 >>>   "World Records Book"
+```
 
+
+```
 progress_dots(percent):= "🔵"^10percent * "⚪"^10(1-percent)
    
 progress_dots(0.8)
@@ -328,6 +362,75 @@ liebniz_pi = .+-4/[1:2:]
 e = .+/!![0:]
 
 leap_year(yr):= yr %% 4&(!100|400)
+
+npv = .+(costs./(1+r)^[0:])
+
+norm(X):= ^/.+X.^2
+softmax(X):= e^X/.+e^X
+
+checkMatrix(m):= (1\/m)==(I(m)/\<~>I(m))
+
+[][1,2,3,4] == [[1],[1,2],[1,2,3],[1,2,3,4]]
+{}[1,2,3,4]
+
+(-*4.:strs)(%_==4)[0]	# New algorithm?
+(-*4.:strs)(#_==4)[0]	// Old algorithm?
+str(:,4)(-*_==_)[0]
+
+//for scans—
+(scan_type, window)
+(:,window)          is a slicing scan with window size
+(scan_type, :)      is a ____ scan with increasing window size
+(:,:)               empty scan
+
+str = "chicky"
+str(:,:) == ["c","ch","chi","chic","chick","chicky"]
+str(:,4) == ["chic","hick","icky"]
+
+nums = [1,2,3,4,5]
+nums(:,:) == [[1],[1,2],[1,2,3],[1,2,3,4],[1,2,3,4,5]]
+nums(:,2) == [[1,2],[2,3],[3,4],[4,5]]
+nums(*,:) == [1,2,6,24,120]
+nums(*,2) == [2,6,12,20]
+
+
+.:max([1,5,0,7,2]) === [1,5,5,7,7]  # max scan
+max([1,5,0,7,2]) == 7
+max([1,5,0,7,2],:) == [1,5,5,7,7]  
+avg([1,5,0,7,2]) === 15/5 == 3
+avg([1,5,0,7,2],:3) === [6/3,12/3,9/3] == [2,4,3]
+3.:+[1,5,0,7,2] === 
+[1,5,0,7,2](3,+) === [6,12,9]
+[1,5,0,7,2](+,3) === 
+
+[1,5,0,7,2](:) === [[1],[1,5],[1,5,0],[1,5,0,7],[1,5,0,7,2]]
+[1,5,0,7,2](/\) === [1,5,5,7,7]
+[1,5,0,7,2](avg) === [1,3,2,3.25,3]
+[1,5,0,7,2](avg,3) === [2,4,3]
+[1,5,0,7,2](3) === [[1,5,0],[5,0,7],[0,7,2]]
+[1,5,0,7,2](:,3) === [[1,5,0],[5,0,7],[0,7,2]]
+
+[1,5,0,7,2](==3) === []       //no indices where == 0
+[1,5,0,7,2][>=3] === 
+
+1 # 4 == 1,1,1,1
+[0#10] === [0,0,0,0,0,0,0,0,0,0]
+
+//idioms
+#[0#n] === n
+
+4.:"chicky" => ["chic","hick","icky"]
+2.:*[1,3,5,7] => [3,15,35]	//pairwise multiplication (this looks terrible)
+
+"chicky"(:,4) == ["chic","hick","icky"]
+
+
+avg(X):= .+X/#X				//define average function
+moving_avg(X,size):= size.:avg(X)	//moving average with window size
+moving_avg(X,size):= X(avg,size)    //avg scan with window size
+
+num_factors(N):= .+(N %% [1:N])
+
 ```
 
 
