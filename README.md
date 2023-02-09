@@ -13,9 +13,17 @@ Feature correspondent/equivalent Python code shown everywhere along the way, so 
 
 Why does terseness matter? Why it isn't everything.
 
+Noda seeks to be a language which...
+1. Evolves Python by stealing from the Array (APL), Logical (Prolog), and Functional (Haskell) paradigms
+2. Makes commonplace Python packages like Pandas, Numpy, PyTorch, and regex *first-class*
+3. Expands regex-like pattern matching to the language at large (for every data structure)
+4. Prioritizes linear algebra, rank polymorphism, and tabular data manipulation (including JSONs)
+5. Interfaces with SQL seamlessly and makes relational operations *first-class*
+6. Takes 1/3 the strokes and 1/2 the time to script with compared to Python
+
 Explanation of awesome, terse examples, with equivalent Python and APL code to match.
 
-We need a showcase of every oeprator's usages :)
+We need a showcase of every operator's usages :)
 
 Expectations— 
 Let `°` represent any operator, `//` and `/* */` enclose comments, code comparisons to Python will be written in tandem (to be completed).
@@ -25,21 +33,20 @@ OPERATOR OVERVIEW—
 [](#table-of-contents)
 | Family | Operators |
 | ------ | --------- |
-| Arithmetic | `+ - * / \ ^ % ^/ !! /\ \/`
-| Assignment | `= °= := ::= =< => :=:`
-| Conditional | `: ><: ?: :: ;;`
-| Comparison | `> < >= <= %% !%` 
-| Equivalence | `== != === !==`
+| Arithmetic | `+ - * / \ ^ % ^/ /\ \/ +*`
+| Assignment | `= °= := ::= :=: =< =>`
+| Comparison | `> < >= <= == != === !== %%` 
+| Conditional | `: ><: ?: :: ; ;;`
 | String | `-< +< >-< ~= !~`
-| Array | `++ -- ** ^^ \\ << >> ,,`
+| Array | `++ -- ** ^^ ,, \\ << >>`
+| Modifiers | `~ % ^ * ** \ . +- -+`
 | Membership | `# @ $ >-> <-<`
-| Modifiers | `+* -* ~ <~> ->> +> ::`
-| Boolean | `? ?? && \|\|`
+| Boolean | `! !! ? ?? && \|\|`
 | Logic | `! & \| >< -> <->`
-| Metalogic | `<=> ==> >=<`
-| Forks | `+- -+ °,° °&° °\|° ?°`
-| Combinator | `!° .° ~° <>° [°] °:`
-| Relational | `~< ~> >==< >==> <==< <==>`
+| Pattern | `: _ * + ? ?= ?! +- -+` 
+| Combinator | `!° ~° .° <>° °: °&° °\|° ?°`
+| Relational | `~< ~> >=< >=> <=< <=>`
+| Keywords | `for while in of if elif then else`
 
 \*The degree symbol `°` is used to indicate \[*insert any operator*\].
 
@@ -63,12 +70,12 @@ This tutorial assumes you know some Python....
 | ----- | ---- | -------- | ----- |
 | `()` | tuple | `(1,2,3,4)` | immutable list
 | `{}` | set | `{1,2,3,4}` | unordered
-| `[}` | ring | `[1,2,3,4,5}` | loops on itself
+| `[)` | ring | `[1,2,3,4,5)` | loops on itself
 | `[]` | array | `[1,2,3,4,5]` | n-dimensional array
 | `:` | slice | `1:4` | like range(1,4)
 | `{}` | dict | `{"a": 1, "b": 2}` | dict and dataframe
 
-Sets `{}` and tuples `()` behave similarly to Python——sets are unordered, tuples are immutable. Rings `[}` are like lists, but loop back on themselves and can be indexed anywhere: `[0,1,2,3}[4] == [0,1,2,3}[0] == 0`. Slices are denoted with `a:b` and are inclusive by default: `1:4 == 1,2,3,4`. To enforce exclusivity, use brackets `[]` for inclusive, parens `()` for exclusive: 
+Sets `{}` and tuples `()` behave similarly to Python——sets are unordered, tuples are immutable. Rings `[)` are like lists, but loop back on themselves and can be indexed anywhere: `[0,1,2,3)[4] == [0,1,2,3)[0] == 0`. Slices are denoted with `a:b` and are inclusive by default: `1:4 == 1,2,3,4`. To enforce exclusivity, use brackets `[]` for inclusive, parens `()` for exclusive: 
 ```csharp
 [1:4] == [1,2,3,4]   // inclusive / inclusive
 [1:4) == [1,2,3]     // inclusive / exclusive
@@ -80,6 +87,12 @@ Sets `{}` and tuples `()` behave similarly to Python——sets are unordered, tu
 [1:2:7] == [1,3,5,7] // start:step:end
 [1:2:] == [1,3,5..]  // odd numbers
 [:2:] == [0,2,4..]   // even numbers
+```
+
+```csharp
+[
+
+
 ```
 All arrays/lists `[]` are n-dimensional arrays, and mimic the conventions of Numpy/Pytorch/Tensorflow. Likewise, all dicts are dataframes and mimic many of the conventions of Pandas. Both may be indexed along each dimension:
 ```
