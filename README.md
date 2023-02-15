@@ -14,12 +14,18 @@ Feature correspondent/equivalent Python code shown everywhere along the way, so 
 Why does terseness matter? Why it isn't everything.
 
 Noda seeks to be a language which...
-1. Evolves Python by stealing from the Array (APL), Logical (Prolog), and Functional (Haskell) paradigms
+1. Evolves Python by stealing from Array (APL), Logical (Prolog), OOP (Smalltalk), and Functional (Haskell) paradigms
 2. Makes commonplace Python packages like Pandas, Numpy, PyTorch, and regex *first-class*
 3. Expands regex-like pattern matching to the language at large (for every data structure)
 4. Prioritizes linear algebra, rank polymorphism, and tabular data manipulation (including JSONs)
-5. Interfaces with SQL seamlessly and makes relational operations *first-class*
-6. Takes 1/3 the strokes and 1/2 the time to script with compared to Python
+5. Supports functional constructs like maps, filters, predicates, structs, and functors
+6. Shamelessly adopts Smalltalk's OOP, control-flow mechanisms, piping, and custom keyword creation
+7. Interfaces with SQL seamlessly and makes relational operations *first-class*
+8. Is concise, taking 1/3 the strokes and 1/2 the time to script with compared to Python
+9. Takes inspiration from APLs but doesn't feel cryptic
+10. Enables LISP-like macros and metaprogramming
+11. Optionally typed, to satisfy both dynamic and static programmers
+12. Is lightning fast, where multiple dispatch is baked into every calculation
 
 Explanation of awesome, terse examples, with equivalent Python and APL code to match.
 
