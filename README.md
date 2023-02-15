@@ -15,6 +15,7 @@ Why does terseness matter? Why it isn't everything.
 
 Noda seeks to be a language which...
 [](#table-of-contents)
+| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | Out-of-the-Box:		|Makes commonplace Python packages like Pandas, Numpy, PyTorch, and regex first-class
 | 4 Paradigms in 1:	|Evolves Python by stealing from Array (APL), Logical (Prolog), OOP (Smalltalk), and Functional (Haskell) paradigms
 | ML Oriented:		|Prioritizes linear algebra, rank polymorphism, and tabular data manipulation (including JSONs/dataframes)
