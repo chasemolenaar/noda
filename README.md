@@ -476,7 +476,27 @@ day(num):=
 day(3)      //"Thursday"
 ```
 
+#### Maximum Nested Parentheses (Switch Case)
+Task: Calculate the maximum depth of nested parentheses of a string `s`—
+```csharp
+max_nested(s):= max(s(*"()":+-1)(+)) 
+```
+
 #### Prime Divisibility
+```csharp
+is_prime(n):= none(n %% [2:n])
+```
+
+```python
+def is_prime(s):
+    for i in range(2, n):
+        if (n % i == 0):
+            return False
+    else:
+        return True
+        
+not any(n % i == 0 for i in range(2,n))
+```
 
 #### Check If Run of Cards
 Task: Verify sequence of cards makes a valid run
