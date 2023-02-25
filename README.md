@@ -11,10 +11,11 @@ Feature correspondent/equivalent Python code shown everywhere along the way, so 
 
 Why does terseness matter? Why it isn't everything.
 
-Features/Ambitions—
+**Ambitions—**
+![image](https://user-images.githubusercontent.com/84992695/221332921-04c9609c-f982-4f8e-a1b7-9d1e7f22e6d3.png)
 
-![image](https://user-images.githubusercontent.com/84992695/221325995-61d67bea-195a-491c-9939-82c7db4ea13b.png)
-
+**Special Features—**
+![image](https://user-images.githubusercontent.com/84992695/221332861-7fbc0e09-b3bb-4843-a971-853bc8aa1d2f.png)
 
 
 
