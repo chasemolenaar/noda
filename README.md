@@ -1,23 +1,15 @@
 # Noda
-An Array-Oriented, OOP, FP, and Logical Programming Language for Concise Pseudocode-like Scalability
+![image](https://user-images.githubusercontent.com/84992695/221333492-bfdd39e5-1867-4f54-9155-23a60934cdf7.png)
 
-Noda is ambitious. It seeks to bring the concision and power of array languages like APL to the readability and friendliness of Python. To make so accessible functional programming constructs like map-filter-reduce they seem trivial to kindergarteners. To popularize Prolog-like logical deduction for an evermore AI-driven world. To devise a language that is fun to write, fast to execute, cool to look at, and easy to read.
+Ever been frustrated with Numpy, or found it difficult to manipulate large amounts of data efficiently? Look no further than our programming language! Designed with data manipulation in mind, our language makes it easy to work with arrays, matrices, and other complex data structures. With intuitive syntax and powerful built-in functions, you'll be able to handle even the most challenging data sets with ease. And with a growing community of developers and extensive documentation, you'll never be alone on your coding journey. So why settle for cumbersome data manipulation tools when you can revolutionize your workflow with our programming language?
 
-It is a language designed by Data Scientists, for Data Scientists.
-
-Hook the reader in with some twist, some draw to Noda's design. Why it's different, better than Python or other languages. Why it's powerful, terse, scalable. Something they can grasp quickly, without thinking.
-
-Feature correspondent/equivalent Python code shown everywhere along the way, so the user is never confused as to what your syntax does.
-
-Why does terseness matter? Why it isn't everything.
+Programming in Noda should feel like a supercharged Numpy, 
 
 **Ambitions—**
 ![image](https://user-images.githubusercontent.com/84992695/221332921-04c9609c-f982-4f8e-a1b7-9d1e7f22e6d3.png)
 
 **Special Features—**
 ![image](https://user-images.githubusercontent.com/84992695/221332861-7fbc0e09-b3bb-4843-a971-853bc8aa1d2f.png)
-
-
 
 Explanation of awesome, terse examples, with equivalent Python and APL code to match.
 
@@ -32,16 +24,16 @@ OPERATOR OVERVIEW—
 | Family | Operators |
 | ------ | --------- |
 | Arithmetic | `+ - * / \ ^ % ^/ /\ \/ +*`
-| Assignment | `= °= := ::= :=: =< =>`
-| Comparison | `> < >= <= == != === !== %%` 
-| Conditional | `: ><: ?: :: ; ;;`
+| Assignment | `= °= := ::= =< =>`
+| Comparison | `> < >= <= == != %% === !==` 
+| Conditional | `: ><: ?: :: :=: ; ;;`
 | String | `-< +< >-< ~= !~`
-| Array | `++ -- ** ^^ ,, \\ << >>`
-| Modifiers | `~ % ^ * ** \ . +- -+`
+| Array | `++ -- ** ^^ ,, \\ << >> <>`
+| Unary | `~ $ % ^ * ** \ . +- -+`
 | Membership | `# @ $ >-> <-<`
 | Boolean | `! !! ? ?? && \|\|`
 | Logic | `! & \| >< -> <->`
-| Pattern | `: _ * + ? ?= ?! +- -+` 
+| Pattern | `: _ * + ? ?= ?!` 
 | Combinator | `!° ~° .° <>° °: °&° °\|° ?°`
 | Relational | `~< ~> >=< >=> <=< <=>`
 | Keywords | `for while in of if elif then else`
