@@ -3,7 +3,22 @@
 
 Ever been frustrated with Numpy, or found it difficult to manipulate large amounts of data efficiently? Look no further than our programming language! Designed with data manipulation in mind, our language makes it easy to work with arrays, matrices, and other complex data structures. With intuitive syntax and powerful built-in functions, you'll be able to handle even the most challenging data sets with ease. And with a growing community of developers and extensive documentation, you'll never be alone on your coding journey. So why settle for cumbersome data manipulation tools when you can revolutionize your workflow with our programming language?
 
-Programming in Noda should feel like a supercharged Numpy, 
+Noda is a supercharged Numpy/PyTorch hybrid, with synactic inspirations everywhere:
+1. Haskell's predicates, maps, and filters
+2. APL/J Combinators, monadic/dyadic operators, reductions/scans, outer/inner products
+3. Ruby and Smalltalk object patterns, function composition
+4. Idris pattern matching
+5. Julia's multiple dispatch, custom operators, and elementwise functions
+6. LISP-like macros
+7. Logical Expressions from Verse
+8. Unification and backtracking from Prolog
+9. Perl's regex pattern matching
+10. Jai switch statements, Python match case
+11. Elixir/Ruby array operators
+12. Optionality and Coalescence from C#
+13. Grade, sort, reverse, max/min operators from BQN
+14. Relational operators from SQL
+15. Elementwise rank polymorphism from Numpy
 
 **Ambitions—**
 ![image](https://user-images.githubusercontent.com/84992695/221332921-04c9609c-f982-4f8e-a1b7-9d1e7f22e6d3.png)
