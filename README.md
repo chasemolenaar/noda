@@ -35,16 +35,16 @@ OPERATOR OVERVIEW—
 | Assignment | `= °= := ::= =< =>`
 | Comparison | `> < >= <= == != %% === !==` 
 | Conditional | `: ><: ?: :: :=: ; ;;`
-| String | `-< +< >-< * /`
+| String | `-< +< >-< * / ^ %`
+| Indexing | `: :: +: -: .`
 | Array | `++ -- ** ^^ \\ << >> <>`
 | Relational | `/\ \/ ~< ~>`
 | Membership | `# @ $`
 | Unary | `~ $ % ^ * ** \ .`
 | Boolean | `! !! ? ?? && \|\|`
-| Logic | `! & \| >< -> <->`
-| Pattern | `: _ * + ? ?= ?!` 
+| Logic | `! & \| >< -> <-> <=> ==> >=<`
+| Pattern | `: _ * + ? ?= ?!`
 | Combinator | `!° ~° .° +- -+`
-| Indexing | `: +: -:`
 | Keywords | `for while in of if elif then else`
 
 \*The degree symbol `°` is used to indicate \[*insert any operator*\]. `//` and `/* */` enclose comments like in C++.
@@ -58,11 +58,11 @@ Noda targets both a Python audience. Noda is heavily inspired by Python, so it's
 This tutorial assumes you know some Python....
 
 #### Similarites With Python
-1. Numpy indexing conventions (starts at 0, start:stop:step)
+1. Numpy indexing conventions (starts at `0`, `start:stop:step`)
 2. Indentation sensitivity (for conditionals and loops)
-3. All Python keywords are valid
+3. All Python keywords and built-ins are valid
 4. Operations are elementwise on arrays/dataframes
-5. Dict, set, and array syntax
+5. Dict, set, dataframe, and array syntax
 6. 
 
 #### Differences With Python
@@ -71,7 +71,10 @@ This tutorial assumes you know some Python....
 3. Function `:=` and class `::=` definition operators
 4. Strings must use `""`, regexes use `''`
 5. Lists are arrays, dicts are dataframes
-6. C# operators like `??`, `?:`, ?.`, and `
+6. C# operators like `??`, `?:`, `?.`, and `=>`
+7. Simplified OOP syntax, function/method composition `.`
+8. Predicates, maps, functors 
+9. Ring Buffers
 
 
 ### Basic Data Structures
@@ -139,13 +142,14 @@ df[:,:3]
 | `%` | modulo | `11 % 5 == 1` | modulo remainder
 | `^` | power | `2 ^ 3 == 8` | exponent
 | `^/`| root | `3^/125 == 5` | nth root of number
-| `!!`| choose | `4 !! 2 == 6` | n-choose-k
-| `/\`| max | `4 /\ 5 == 5` | maximum value
-| `\/`| min | `4 \/ 5 == 4` | minimum value
+| `\/`| max | `3 \/ 5 == 3` | minimum value
+| `/\`| min | `3 /\ 5 == 5` | maximum value
 
-* Times `*`, division `/`, and power `^` are matrix operations on arrays
-* Floordiv `\` becomes left divide on arrays (linear solution to `Ax = B` using `x = A\B`)
-* Reciprocal `/` returns the inverse of a square matrix 
+* Times `*`, division `/`, and power `^` are elementwise on arrays/matrices
+* Plus times `+*` computes matrix multiplication
+* Floordiv `\` returns the inverse of a square matrix, and the pseudoinverse 
+* Max/min return the lexically greater/less string: `"apple" \/ "banana" == "banana"`
+* 
 
 -----------------------------------------------------------------------------------------------
 
@@ -160,7 +164,7 @@ df[:,:3]
 * Plus `+` and minus `-` convert strings into ints/floats: `+"123" == 123`
 * Juxtaposition multiplies functions: `f(x)g(x) == f(x)*g(x)`
 * Factorials of floats return Gamma function values `Γ(n-1)`
-* Max and min return the lexically greater/less string: `"apple" /\ "banana" == "banana"`
+
 
 #### Comparison
 
