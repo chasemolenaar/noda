@@ -26,13 +26,6 @@ Noda is a supercharged Numpy/PyTorch hybrid, with synactic inspirations everywhe
 **Special Features—**
 ![image](https://user-images.githubusercontent.com/84992695/221332861-7fbc0e09-b3bb-4843-a971-853bc8aa1d2f.png)
 
-Explanation of awesome, terse examples, with equivalent Python and APL code to match.
-
-We need a showcase of every operator's usages :)
-
-Expectations— 
-Let `°` represent any operator, `//` and `/* */` enclose comments, code comparisons to Python will be written in tandem (to be completed).
-
 OPERATOR OVERVIEW—
 
 [](#table-of-contents)
@@ -42,18 +35,19 @@ OPERATOR OVERVIEW—
 | Assignment | `= °= := ::= =< =>`
 | Comparison | `> < >= <= == != %% === !==` 
 | Conditional | `: ><: ?: :: :=: ; ;;`
-| String | `-< +< >-< ~= !~`
-| Array | `++ -- ** ^^ ,, \\ << >> <>`
-| Unary | `~ $ % ^ * ** \ . +- -+`
-| Membership | `# @ $ >-> <-<`
+| String | `-< +< >-< * /`
+| Array | `++ -- ** ^^ \\ << >> <>`
+| Relational | `/\ \/ ~< ~>`
+| Membership | `# @ $`
+| Unary | `~ $ % ^ * ** \ .`
 | Boolean | `! !! ? ?? && \|\|`
 | Logic | `! & \| >< -> <->`
 | Pattern | `: _ * + ? ?= ?!` 
-| Combinator | `!° ~° .° <>° °: °&° °\|° ?°`
-| Relational | `~< ~> >=< >=> <=< <=>`
+| Combinator | `!° ~° .° +- -+`
+| Indexing | `: +: -:`
 | Keywords | `for while in of if elif then else`
 
-\*The degree symbol `°` is used to indicate \[*insert any operator*\].
+\*The degree symbol `°` is used to indicate \[*insert any operator*\]. `//` and `/* */` enclose comments like in C++.
 
 RANK POLYMORPHISM
 
@@ -63,12 +57,24 @@ RANK POLYMORPHISM
 Noda targets both a Python audience. Noda is heavily inspired by Python, so it's safe to assume that constructs will look like Python if unspecified.
 This tutorial assumes you know some Python....
 
-#### Ground Rules
-1. Noda indexes by 0, which is the superior choice
-2. Noda is indentation sensitive, like Python
-3. 
+#### Similarites With Python
+1. Numpy indexing conventions (starts at 0, start:stop:step)
+2. Indentation sensitivity (for conditionals and loops)
+3. All Python keywords are valid
+4. Operations are elementwise on arrays/dataframes
+5. Dict, set, and array syntax
+6. 
 
-#### Basic Data Structures
+#### Differences With Python
+1. Comments use `//` and `/* */`
+2. Exponentiation is `^`, floor division is `\`
+3. Function `:=` and class `::=` definition operators
+4. Strings must use `""`, regexes use `''`
+5. Lists are arrays, dicts are dataframes
+6. C# operators like `??`, `?:`, ?.`, and `
+
+
+### Basic Data Structures
 
 [](#table-of-contents)
 | empty | type | instance | notes |
@@ -150,9 +156,6 @@ df[:,:3]
 | `-` | minus | `-4 == -4` | negative
 | `/` | divide | `/5 == 1/5 == 0.2` | reciprocal
 | `^/`| root | `^/36 == 6` | square root
-| `!!`| choose | `!!4 == 24` | factorial
-| `/\`| max | `/\[0,2,1] == 2` | maximum value
-| `\/`| min | `\/[0,2,1] == 0` | minimum value
 
 * Plus `+` and minus `-` convert strings into ints/floats: `+"123" == 123`
 * Juxtaposition multiplies functions: `f(x)g(x) == f(x)*g(x)`
