@@ -1,7 +1,7 @@
 # Noda
 ![image](https://user-images.githubusercontent.com/84992695/221333492-bfdd39e5-1867-4f54-9155-23a60934cdf7.png)
 
-Ever been frustrated with Numpy, or found it difficult to manipulate large amounts of data efficiently? Look no further than our programming language! Designed with data manipulation in mind, our language makes it easy to work with arrays, matrices, and other complex data structures. With intuitive syntax and powerful built-in functions, you'll be able to handle even the most challenging data sets with ease. And with a growing community of developers and extensive documentation, you'll never be alone on your coding journey. So why settle for cumbersome data manipulation tools when you can revolutionize your workflow with our programming language?
+Ever wanted more out of Numpy, Pandas, or PyTorch? Found difficulties manipulating large amounts of data efficiently?
 
 Noda is a supercharged Numpy/PyTorch hybrid, with synactic inspirations everywhere:
 1. Haskell's predicates, maps, and filters
@@ -52,18 +52,16 @@ OPERATOR OVERVIEW—
 RANK POLYMORPHISM
 
 #### Core Ideas
-1. Noda
-
-Noda targets both a Python audience. Noda is heavily inspired by Python, so it's safe to assume that constructs will look like Python if unspecified.
-This tutorial assumes you know some Python....
+Noda targets a Python audience, sharing many ideas and constructs. Here's how it compares to Python:
 
 #### Similarites With Python
 1. Numpy indexing conventions (starts at `0`, `start:stop:step`)
 2. Indentation sensitivity (for conditionals and loops)
-3. All Python keywords and built-ins are valid
+3. Pythonic keywords and built-ins are valid
 4. Operations are elementwise on arrays/dataframes
-5. Dict, set, dataframe, and array syntax
-6. 
+5. Dict, set, dataframe, tuple, and array syntax
+6. Embeddable, can import Python libraries
+7. Similar OOP, dataclass support
 
 #### Differences With Python
 1. Comments use `//` and `/* */`
@@ -73,8 +71,12 @@ This tutorial assumes you know some Python....
 5. Lists are arrays, dicts are dataframes
 6. C# operators like `??`, `?:`, `?.`, and `=>`
 7. Simplified OOP syntax, function/method composition `.`
-8. Predicates, maps, functors 
-9. Ring Buffers
+8. Predicates, maps, filters, reductions, functors
+9. Implicit conditionals and returns, switch statements
+10. Ring buffers, 
+11. Advanced pattern matching + logical expressions
+12. Everything is an object and a function
+13. Uniform Function Call Syntax
 
 
 ### Basic Data Structures
