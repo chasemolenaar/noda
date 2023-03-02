@@ -31,12 +31,12 @@ OPERATOR OVERVIEW—
 [](#table-of-contents)
 | Family | Operators |
 | ------ | --------- |
+| Indexing | `: :: +: -:`
 | Arithmetic | `+ - * / \ ^ % ^/ /\ \/ +*`
-| Assignment | `= °= := ::= =< =>`
+| Assignment | `= °= := ::= =< => .`
 | Comparison | `> < >= <= == != %% === !==` 
 | Conditional | `: ><: ?: :: :=: ; ;;`
 | String | `-< +< >-< * / ^ %`
-| Indexing | `: :: +: -: .`
 | Array | `++ -- ** ^^ \\ << >> <>`
 | Relational | `/\ \/ ~< ~>`
 | Membership | `# @ $`
@@ -61,23 +61,24 @@ Noda targets a Python audience, sharing many ideas and constructs. Here's how it
 4. Operations are elementwise on arrays/dataframes
 5. Dict, set, dataframe, tuple, and array syntax
 6. Embeddable, can import Python libraries
-7. Similar OOP, dataclass support
+7. Similar OOP, dataclass support, decorators
 
 #### Differences With Python
 1. Comments use `//` and `/* */`
 2. Exponentiation is `^`, floor division is `\`
 3. Function `:=` and class `::=` definition operators
-4. Strings must use `""`, regexes use `''`
+4. Strings use quotes `""`, regexes use apostrophes `''`
 5. Lists are arrays, dicts are dataframes
-6. C# operators like `??`, `?:`, `?.`, and `=>`
-7. Simplified OOP syntax, function/method composition `.`
-8. Predicates, maps, filters, reductions, functors
-9. Implicit conditionals and returns, switch statements
-10. Ring buffers, 
-11. Advanced pattern matching + logical expressions
-12. Everything is an object and a function
-13. Uniform Function Call Syntax
-
+6. Expanded suite of array, string, and logic operators
+7. C# operators like `??`, `?:`, `?.`, and lambdas `=>`
+8. Asserts `!!` and unit testing semantics
+9. Simplified OOP syntax, function/method composition `.`
+10. Predicates, maps, filters, reductions, functors
+11. Implicit conditionals / returns, switch statements
+12. Enforced type hints, refinement/gradual typing
+13. Advanced pattern matching + logical expressions
+14. Uniform function call syntax
+15. Everything is a function
 
 ### Basic Data Structures
 
@@ -88,28 +89,27 @@ Noda targets a Python audience, sharing many ideas and constructs. Here's how it
 | `{}` | set | `{1,2,3,4}` | unordered
 | `[)` | ring | `[1,2,3,4,5)` | loops on itself
 | `[]` | array | `[1,2,3,4,5]` | n-dimensional array
-| `:` | slice | `1:4` | like range(1,4)
+| `[:]`| slice | `[1:5]` | iterable
 | `{}` | dict | `{"a": 1, "b": 2}` | dict and dataframe
 
-Sets `{}` and tuples `()` behave similarly to Python——sets are unordered, tuples are immutable. Rings `[)` are like lists, but loop back on themselves and can be indexed anywhere: `[0,1,2,3)[4] == [0,1,2,3)[0] == 0`. Slices are denoted with `a:b` and are inclusive by default: `1:4 == 1,2,3,4`. To enforce exclusivity, use brackets `[]` for inclusive, parens `()` for exclusive: 
-```csharp
-[1:4] == [1,2,3,4]   // inclusive / inclusive
-[1:4) == [1,2,3]     // inclusive / exclusive
-(1:4] == [2,3,4]     // exclusive / inclusive
-(1:4) == [2,3]       // exclusive / exclusive
-[:3] == [0,1,2,3]    // slices start at 0
-(:3] == [1,2,3]      // exclusive of 0
-[0:] == [0,1,2..]    // infinite slice
-[1:2:7] == [1,3,5,7] // start:step:end
-[1:2:] == [1,3,5..]  // odd numbers
-[:2:] == [0,2,4..]   // even numbers
-```
+Sets `{}` and tuples `()` behave similarly to Python——sets are unordered, tuples are immutable. Rings `[)` are like lists, but loop back on themselves and are indexable anywhere: `[0,1,2,3)[4] => [0,1,2,3)[0] => 0`. Like Numpy, arrays are n-dimensional and can be used for matrix operations. But they can contain multiple datatypes at once, and not be rectangular (e.g. differing lengths of rows). Slices are iterables which follow Numpy indexing conventions: `start:stop:step` is inclusive of `start` but exludes `stop`, `step` is optional. Use `+:` and `-:` to set forward and backward slicing windows.
+[](#table-of-contents)
+| slice | equivalent        | notes |
+| ----- | ----------------- | ----- |
+| `[:5]` | `[0,1,2,3,4]`    | 0-5 exclusive
+| `[1:9:2]` | `[1,3,5,7]`   | 1-9, stepwise 2
+| `[-4:]` | `[-4,-3,-2,-1]` | -4-0 exclusive
+| `[::2]` | `[0,2,4,6,8..]` | unbounded, stepwise 2
+| `[3:]`  | `[3,4,5,6,7..]` | numbers 3+
+| `[2+:4]` | `[2,3,4,5]`    | 2 and 4 indices up
+| `[6-:3]` | `[4,5,6]`      | 6 and 3 indices behind
 
-```csharp
-[
+Lastly, dictionaries use Pythonic syntax, but can double as Pandas dataframes. Both dicts and arrays benefit from dimensional Numpy indexing:
+`dict["key"]["field"] => dict["key","field"]
+
+//We will go over predicates and maps in due time!
 
 
-```
 All arrays/lists `[]` are n-dimensional arrays, and mimic the conventions of Numpy/Pytorch/Tensorflow. Likewise, all dicts are dataframes and mimic many of the conventions of Pandas. Both may be indexed along each dimension:
 ```
 X = [[1,2,3],[4,5,6]]
@@ -129,6 +129,9 @@ df[:,:3]
       "points":   [ 5,  7,  7,  9 ]
       "assists":  [ 11, 8,  10, 6 ]}
 ```
+### Operators
+
+Noda parses operators from right to left in a longest-match clumping pattern: `++->-<<>^^/` is parsed as `(+)(+-)(>-<)(<>)(^)(^/)`
 
 #### Arithmetic
 
