@@ -16,8 +16,9 @@ OPERATOR OVERVIEW—
 | Arithmetic | `+ - * / \ % ^ ^/ /\ \/ +* +- -+`
 | Comparison | `> < >= <= == != %% === !==` 
 | String | `-< +< ><`
+| Assignment | `= °= := ::= =<`
 | Conditional | `: ><: ?: :: :=: ; ;;`
-| Functional | `= °= := ::= =< => -> >> .`
+| Functional | `=> -> >> .`
 | Array | `++ -- ** ^^ << \\ <>`
 | Relational | `/\ \/ ~< ~>`
 | Membership | `# @ $`
@@ -307,6 +308,28 @@ error > 0.00001::
     curr = gradient_descent(curr)
     error = curr - prev
 ```
+## Functional
+`=> >> . :: ->`
+[](#table-of-contents)
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `=>` | lambda | `x => x + 1` | obviates if/elif keyword
+| `>>` | pipe | `_: do_default` | replaces else keyword
+| `.` | compose | `if_true ? do_this : otherwise` | ternary conditional
+| `::` | type | `if_not_null ?? otherwise` | returns left argument if not null
+| `->` | output | `variable :=: case1: do_x` | switch statement
+
+[](#table-of-contents)
+| object | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `()` | filter | `list(>0)` | filters positive list values
+| `[]` | map | `list[_+1]` | adds 1 to each item in list
+| `{}` | filtermap | `list{"(": 1, ")": -1}` | find and replace parentheses with numbers
+
+* Filters can omit underscore `_` if a comparator appears first; the above can be expanded into `list(_>0)`
+* Filters must 
+* Maps and filters can use the arrow `=>` for named lambdas: `options(opt => !opt.assigned)`
+* Both can be assigned as their own data structures: `half_map = [_/2]; filter_even = (_%%2)`
 
 #### Array/Setwise
 
