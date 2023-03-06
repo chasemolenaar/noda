@@ -12,20 +12,20 @@ OPERATOR OVERVIEW—
 [](#table-of-contents)
 | Family | Operators |
 | ------ | --------- |
-| Indexing | `: :: +: -:`
-| Arithmetic | `+ - * / \ ^ % ^/ /\ \/ +*`
-| Functional | `= °= := ::= =< => >> .`
+| Indexing | `: +: -:`
+| Arithmetic | `+ - * / \ % ^ ^/ /\ \/ +* +- -+`
 | Comparison | `> < >= <= == != %% === !==` 
+| String | `-< +< ><`
 | Conditional | `: ><: ?: :: :=: ; ;;`
-| String | `-< +< >-< * / ^ %`
+| Functional | `= °= := ::= =< => -> >> .`
 | Array | `++ -- ** ^^ << \\ <>`
 | Relational | `/\ \/ ~< ~>`
 | Membership | `# @ $`
-| Unary | `~ $ % ^ * ** \ .`
+| Morphers | `~ $ % ^ * ** \ .`
 | Boolean | `! !! ? ?? && \|\|`
-| Logic | `! & \| >< -> <-> <=> ==> >=<`
+| Logic | `! & \| >-< <-> <=> ==> >=<`
 | Pattern | `: _ * + ? ?= ?!`
-| Combinator | `!° ~° .° +- -+`
+| Combinator | `!° ~° .°`
 | Keywords | `for while in of if elif then else`
 
 \*The degree symbol `°` is used to indicate \[*insert any operator*\]. `//` and `/* */` enclose comments like in C++.
@@ -56,7 +56,7 @@ Noda is a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirations e
 8. C# operators like `??`, `?:`, `?.`, and lambdas `=>`
 9. Asserts `!!` and unit testing semantics
 10. Simplified OOP syntax, function/method composition `.`
-11. Predicates`(>0)`, maps `[_+2]`, reductions `.+X`, functors
+11. Predicates `(>0)`, maps `[_+2]`, reductions `.+X`, functors
 12. Implicit conditionals / returns, switch statements `:=:`
 13. Enforced type hints, refinement/gradual typing `::`
 14. Advanced pattern matching + logical expressions
@@ -216,22 +216,97 @@ Noda parses operators from right-to-left in a longest-match clumping pattern: `+
 
 Match operators `~=` and `!~` check whether a regex pattern matches a string. 
 
-#### Assignment
+## Assignment
 [](#table-of-contents)
 | op | name | instance | notes |
 | -- | ----- | ------- | ----- |
 | `=` | assign | `x = 1` | stores value of 1 for x
-| `?=` | initialize | `count ?= 0` | assigns count to 0 if null or nonexistent
 | `°=` | reassign | `x += 1` | adds 1 to current value of x
 | `=<` | vacuum | `a =< b[:2]` | pops slice from b and assigns it to a
-| `:=:` | swap | `a :=: b` | swaps the values of a and b ((a,b) = (b,a))
 | `:=` | define | `add(x,y):= x + y` | function definition
 | `::=` | class | `Person::= ...` | class definition
 
+* Reassignment mechanics are available for custom operator
 * Unary vacuum `=<` deletes a slice of a collection: `=<dict["names"]` deletes the key `"names"` from `dict`
-* Define `:=` can be used on variables (not just functions), thereby creating dependent variables / properties; in `y := x^2 -2`, y is linked to x, and if x changes, y will be updated with the current value. In a broader sense, define `:=` is used like Prolog's logical implcation `:-` operator (as you will see). The last expression in a function returns.
+* Define `:=` can be used on variables (not just functions), thereby creating dependent variables / properties; in `y := x^2 - 2`, y is linked to x, and if x changes, y will be updated with the current value (akin to a nullary function `y()`). In a broader sense, define `:=` is used like Prolog's logical implcation `:-` operator for unification.
+* The last expression in a function is returned (`return` keyword is generally omitted). You can mute this by appending `;`.
 
-(show examples of classes using `::=`)
+Custom operators are defined similarly to functions, but wrapped in parentheses:
+`(⋃)(A,B):= Union(A,B)`
+
+Classes are best explained with an example:
+```
+Rectangle(Shape)::=
+    __(o,height,width):=
+        o.height = height
+        o.width = width
+        o.og_dimensions = (height, width)
+
+    resize(o,factor):=
+        o.height *= ^/factor
+        o.width *= ^/factor
+
+    lengthen(o,factor):= o.width  *= factor
+    heighten(o,factor):= o.height *= factor
+    o.circumference := 2(o.height + o.width)
+    o.area := o.height * o.width
+    o.diagonal := ^/(height^2 + width^2)
+```
+
+Inheritance works like Python, so `Rectangle(Shape)` inherits properties from `Shape`. The constructor is written with a double underscore `__`, and the `self` keyword is replaced with `o`. In the example, the constructor ingests a `height` and `width`, assigns them to class variables, and keeps a record of the original dimensions. The `resize`, `lengthen`, and `heighten` methods mutate the `Rectangle`'s dimensions by a sizing factor. Meanwhile, `circumference`, `area`, and `diagonal` are all properties of the `Rectangle` which change depending on the current `height` and `width`. 
+
+Class `::=` defintions can be repurposed to structs, dataclasses, traits, and custom types. Class composition is encouraged.
+
+## Conditional
+[](#table-of-contents)
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `:` | if/elif | `conditional: do_this` | obviates if/elif keyword
+| `_:` | else | `_: do_default` | replaces else keyword
+| `?:` | ternary | `if_true ? do_this : otherwise` | ternary conditional
+| `??` | coalesce | `if_not_null ?? otherwise` | returns left argument if not null
+| `:=:` | switch | `variable :=: case1: do_x` | switch statement
+| `::` | loop | `name in names::` | for/while loop
+
+* `?:` and `??` work like they're known to in C#
+* Keywords `if`, `elif`, and `else` are all valid like in Python (but generally omitted)
+* Successive colon conditionals `:` create an if-elif chain ending with else/default `_:`
+```csharp
+//Keyword chain of if-elif-else
+if conditional1:     do_thing1
+elif conditional2:   do_thing2
+elif conditional3:   do_thing3
+else:                do_thing4
+
+//Implicit elif-chain semantics
+conditional1:     do_thing1
+conditional2:     do_thing2
+conditional3:     do_thing3
+_:                do_thing4
+```
+* Switch case `:=:` creates nested conditionals matching against the variable given:
+```
+lang = input("What's the programming language you want to learn? ")
+
+lang :=:
+    "JavaScript"|"JS":  print("You can become a web developer.")
+    "Python":           print("You can become a Data Scientist")
+    "C++"|"Go":         print("You can become a backend developer")
+    "Solidity":         print("You can become a Blockchain developer")
+    "Java":             print("You can become a mobile app developer")
+    _:                  print("The language doesn't matter, what matters is solving problems.")
+```
+* Loops `::` do a for loop or while loop depending on the condition supplied. If membership is checked (like `in`), it's a for loop. If a condition if checked (`error > 0.00001`), it's a while loop. Use triple colon `:::` to make a do-while loop that runs first without checking.
+```
+name in names::
+   key, value in dict::
+       key != name:  key[value] = name
+
+error > 0.00001::
+    prev = curr
+    curr = gradient_descent(curr)
+    error = curr - prev
+```
 
 #### Array/Setwise
 
@@ -306,31 +381,6 @@ Unary rotate `<~>` reverses an array/string: `<~>[1,2,3] == [3,2,1]; <~>"live" =
 // ?? is also the coalesce operator, and ?= is the initialize operator
 //1_000 T F U I o oo O 
 
-[](#table-of-contents)
-| op | name | instance | notes |
-| -- | ----- | ------- | ----- |
-| `?:` | ternary | `if_true ? do_this : otherwise` | ternary conditional
-| `??` | coalesce | `if_not_null ?? otherwise` | returns left argument if not null
-| `:` | elif chain | `conditional: do_this` | obviates if/elif keyword
-| `><:` | else | `false \|\| true == true` | replaces else keyword
-| `==:` | switch | `variable ==: case1: do_x` | switch statement
-
-* `?:` and `??` work like they're known to in C#
-* Keywords `if`, `elif`, and `else` are all valid like in Python
-* Successive colon conditionals `:` create an if-elif chain ending with else `><:`
-```csharp
-//Keyword chain of if-elif-else
-if conditional1:     do_thing1
-elif conditional2:   do_thing2
-elif conditional3:   do_thing3
-else:                do_thing4
-
-//Implicit elif-chain semantics
-conditional1:     do_thing1
-conditional2:     do_thing2
-conditional3:     do_thing3
-><:               do_thing4
-```
 
 #### Logex
 
