@@ -1,8 +1,6 @@
 # Noda
 ![image](https://user-images.githubusercontent.com/84992695/221333492-bfdd39e5-1867-4f54-9155-23a60934cdf7.png)
 
-Noda is a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirations everywhere:
-
 **Ambitions—**
 ![image](https://user-images.githubusercontent.com/84992695/221332921-04c9609c-f982-4f8e-a1b7-9d1e7f22e6d3.png)
 
@@ -34,8 +32,8 @@ OPERATOR OVERVIEW—
 
 RANK POLYMORPHISM
 
-#### Core Ideas
-Noda targets a Python audience, sharing many ideas and constructs. Here's how it compares to Python:
+## Core Ideas
+Noda is a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirations everywhere. We target a Python audience, sharing many ideas and constructs. Here's how it compares to Python:
 
 #### Similarites To Python
 1. Indices start at 0
@@ -63,9 +61,9 @@ Noda targets a Python audience, sharing many ideas and constructs. Here's how it
 13. Enforced type hints, refinement/gradual typing `::`
 14. Advanced pattern matching + logical expressions
 15. Uniform function call syntax
-16. Everything is a function / is callable
+16. Everything is a function / is a callable
 
-### Basic Data Structures
+## Basic Data Structures
 
 [](#table-of-contents)
 | empty | type | instance | notes |
@@ -77,7 +75,7 @@ Noda targets a Python audience, sharing many ideas and constructs. Here's how it
 | `[:]`| slice | `[1:5]` | iterable
 | `{}` | dict | `{"a": 1, "b": 2}` | dict and dataframe
 
-Sets `{}` and tuples `()` behave similarly to Python——sets are unordered, tuples are immutable. Rings `[)` are like lists, but loop back on themselves and are indexable anywhere: `[0,1,2,3)[4] => [0,1,2,3)[0] => 0`. Like Numpy, arrays are n-dimensional and can be used for matrix operations. However, they may contain multiple datatypes at once, and not be rectangular (e.g. differing lengths of rows). Slices are iterables like `start:stop`, includes `start` but excludes `stop`. Strides are similar, but the `step` size is in the middle: `start:step:stop`. Use `+:` and `-:` to set forward and backward slicing windows.
+Sets `{}` and tuples `()` behave similarly to Python—sets are unordered, tuples are immutable. Rings `[)` are like lists, but loop back on themselves and are indexable anywhere: `[0,1,2,3)[4] => [0,1,2,3)[0] => 0`. Like Numpy, arrays are n-dimensional and can be used for matrix operations. However, they may contain multiple datatypes at once, and not be rectangular (e.g. differing lengths of rows). Slices are iterables like `start:stop`, includes `start` but excludes `stop`. Strides are similar, but the `step` size is in the middle: `start:step:stop`. Use `+:` and `-:` to set forward and backward slicing windows—
 [](#table-of-contents)
 | slice | equivalent        | notes |
 | ----- | ----------------- | ----- |
@@ -89,12 +87,11 @@ Sets `{}` and tuples `()` behave similarly to Python——sets are unordered, tu
 | `[2+:4]` | `[2,3,4,5]`    | 2 with 4 indices ahead
 | `[6-:3]` | `[4,5,6]`      | 6 with 3 indices behind
 
-Lastly, dictionaries use Pythonic syntax, but can double as Pandas dataframes. Both dicts and arrays benefit from dimensional Numpy indexing:
+Dictionaries use Pythonic syntax `{key: value}`, but can double as Pandas dataframes. Both dicts and arrays benefit from dimensional Numpy indexing:
 `matrix[:10,:10] === matrix[:10][:10]`
 `dict["key","field"] === dict["key"]["field"]`
 
 //We will go over predicates and maps in due time!
-
 
 All arrays/lists `[]` are n-dimensional arrays, and mimic the conventions of Numpy/Pytorch/Tensorflow. Likewise, all dicts are dataframes and mimic many of the conventions of Pandas. Both may be indexed along each dimension:
 ```
@@ -105,21 +102,25 @@ X[:,0]                   // 1st column
 >>>      [[1],[4]]      
 X[:,0:1]                 // 1st & 2nd column
 >>>      [[1,2],[4,5]]  
+```
 
+```
 df = {"team":    ["A","A","A","A","B","B","B","B"]
       "points":  [ 5,  7,  7,  9,  12, 9,  9,  4 ]
       "assists": [ 11, 8,  10, 6,  6,  5,  9,  12]}
-
-df[:,:3]    
-      {"team":    ["A","A","A","A"]
-      "points":   [ 5,  7,  7,  9 ]
-      "assists":  [ 11, 8,  10, 6 ]}
 ```
-### Operators
+```
+df[:,:3]  or  df.[:3]
+      {"team":    ["A","A","A","A"]
+       "points":  [ 5,  7,  7,  9 ]
+       "assists": [ 11, 8,  10, 6 ]}
+```
 
-Noda parses operators from right to left in a longest-match clumping pattern: `++->-<<>^^/` is parsed as `(+)(+-)(>-<)(<>)(^)(^/)`
+## Operators
 
-#### Arithmetic
+Noda parses operators from right-to-left in a longest-match clumping pattern: `++->-<<>^^/` is parsed as `(+)(+-)(>-<)(<>)(^)(^/)`
+
+### Arithmetic
 
 [](#table-of-contents)
 | op  | name | instance | notes |
@@ -135,10 +136,13 @@ Noda parses operators from right to left in a longest-match clumping pattern: `+
 | `^/`| root | `3^/125 == 5` | nth root of number
 | `\/`| max | `3 \/ 5 == 3` | maximum value
 | `/\`| min | `3 /\ 5 == 5` | minimum value
+| `+*`| dot | `u +* v == 0` | matrix multiplication
+| `+-`| plus-minus | `2+-3 == 5,-1` | returns 2 results
+| `-+`| minus-plus | `2-+3 == -1,5` | returns 2 results
 
 * Times `*`, division `/`, and power `^` are elementwise on arrays/matrices like Numpy
-* Plus times `+*` computes matrix multiplication
-* Unary floordiv `\` returns the inverse of a square matrix, or the pseudoinverse 
+* Juxtaposition multiplies functions: `f(x)g(x) == f(x)*g(x)`
+* Plus times `+*` computes matrix multiplication / dot product on arrays
 * Max/min return the lexically greater/less string: `"apple" \/ "banana" == "banana"`
 
 -----------------------------------------------------------------------------------------------
@@ -150,13 +154,13 @@ Noda parses operators from right to left in a longest-match clumping pattern: `+
 | `-` | minus | `-4 == -4` | negative
 | `/` | divide | `/5 == 1/5 == 0.2` | reciprocal
 | `^/`| root | `^/36 == 6` | square root
+| `+-`| plus-minus | `+-2 == +2,-2` | splats + and -
+| `-+`| minus-plus | `-+2 == -2,+2` | splats - and +
 
 * Plus `+` and minus `-` convert strings into ints/floats: `+"123" == 123`
-* Juxtaposition multiplies functions: `f(x)g(x) == f(x)*g(x)`
-* Factorials of floats return Gamma function values `Γ(n-1)`
+* Unary floordiv `\` returns the inverse of a square matrix, or the pseudoinverse 
 
-
-#### Comparison
+### Comparison
 
 [](#table-of-contents)
 | op  | name | instance | notes |
@@ -168,7 +172,6 @@ Noda parses operators from right to left in a longest-match clumping pattern: `+
 | `==` | equal | `1 == 1.0` | equality (of value)
 | `!=` | unequal | `1 != 1.5` | inequality (of value)
 | `%%` | divisible | `20 %% 5` | remainder is 0
-| `!%` | indivisible | `23 !% 5` | remainder is !0
 | `===`| equivalence | `1.0 === 1.0` | same objects
 | `!==`| inequivalence | `1 !== 1.0` | different objects
 
@@ -176,18 +179,18 @@ Noda parses operators from right to left in a longest-match clumping pattern: `+
 * All equality comparisons are elementwise on arrays: `[1,2,3] == [1,0,3]` is `[true,false,true]`
 * Equivalence `===` compares object equality *as a whole*: `[1,2,3] === [1,0,3]` is `false`
 
-#### Strings
+## Strings
 [](#table-of-contents)
 | empty | type | instance | notes |
 | ----- | ---- | -------- | ----- |
-| `""` | string | `"Hi {name}!"` | All strings are fstrings
-| `''` | regex | `'\d+'` | Matches "42069"
-| ``` `` ``` | raw | ``` `"wow!"\\''` ``` | No escape sequences
+| `""` | string | `"Hi {name}!"` | strings are fstrings
+| `''` | regex | `'\d+'` | matches "42069"
+| ``` `` ``` | raw | ``` `"wow!"\\''` ``` | no escape sequences
 
-* All strings are fstrings by default
+* All strings `""` are fstrings by default
 * Escape braces using `\{` and `\}`
 * Raw strings contain no escape sequences: ```filepath = `C:\Documents\Scripts\Test.py` ```
-* Regexes patterns follow the PRCE standard (same as Python and C)
+* Regexes patterns follow the PRCE standard (same as Python and C++)
 * Multiline strings can be written without using triple quotes. Use `\` to escape newline
 * Use triple quotes `"""` to easily escape `"` from text
 
@@ -202,14 +205,14 @@ Noda parses operators from right to left in a longest-match clumping pattern: `+
 | `-<` | split     |`"2/14/23" -< "/" == ["2","14","23"]`   | splits on pattern (remove delimiter)
 | `+<` | snip      |`"2/14/23" +< "/" == ["2/","14/","23"]` | snips on pattern (keep delimiter)
 | `>-<`| join      |`["a","b","c"] >-< ":" == "a:b:c"`      | joins strings by delimiter
-| `~=` | match     |`'\d+\.\d+' ~= "420.69"`                | checks if regex matches string
-| `!~` | unmatch   |`'\d+\.\d+' !~ "1_000"`                 | checks if regex doesn't match string
+| `==` | match     |`'\d+\.\d+' == "420.69"`                | checks if regex matches string
+| `!=` | unmatch   |`'\d+\.\d+' != "1_000"`                 | checks if regex doesn't match string
 
 * Literal concatenation of strings is valid: `"wind""mill" == "windmill"`
 * Right argument tuples limit to n-times: `"split, me, up" -< (", ", 1) == ["split", "me, up"]`
 * Unary `-<` splits on whitespace: `-<"Jane\n S Smith" == ["Jane", "S", "Smith"]`
 * Unary `>-<` joins without space: `>-<["a","b","c"] == "abc"`
-* Binary `>-<` lists together too: `["Okay", "but", "why"] >-< [", ", " ", "?"] == "Okay, but why?"`
+* Binary `>-<` joins lists too: `["Okay", "but", "why"] >-< [", ", " ", "?"] == "Okay, but why?"`
 
 Match operators `~=` and `!~` check whether a regex pattern matches a string. 
 
