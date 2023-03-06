@@ -88,22 +88,18 @@ Sets `{}` and tuples `()` behave similarly to Python—sets are unordered, tuple
 | `[2+:4]` | `[2,3,4,5]`    | 2 with 4 indices ahead
 | `[6-:3]` | `[4,5,6]`      | 6 with 3 indices behind
 
-Dictionaries use Pythonic syntax `{key: value}`, but can double as Pandas dataframes. Both dicts and arrays benefit from dimensional Numpy indexing:
+Dictionaries use Pythonic syntax `{key: value}`, but can double as Pandas dataframes. Dicts and arrays benefit from dimensional Numpy indexing:
 `matrix[:10,:10] === matrix[:10][:10]`
 `dict["key","field"] === dict["key"]["field"]`
-
-//We will go over predicates and maps in due time!
 
 All arrays/lists `[]` are n-dimensional arrays, and mimic the conventions of Numpy/Pytorch/Tensorflow. Likewise, all dicts are dataframes and mimic many of the conventions of Pandas. Both may be indexed along each dimension:
 ```
 X = [[1,2,3],[4,5,6]]
-X[1]                     // 2nd row
->>>      [4,5,6]           
-X[:,0]                   // 1st column
->>>      [[1],[4]]      
-X[:,0:1]                 // 1st & 2nd column
->>>      [[1,2],[4,5]]  
+X[1]      [4,5,6]         // 2nd row              
+X[:,0]    [[1],[4]]       // 1st column        
+X[:,0:1]  [[1,2],[4,5]]   // 1st & 2nd column        
 ```
+Arrays of 2+ dimensions can use `;` to delimit columns instead of nested arrays: `[[1,2],[4,5]] === [1,2; 4,5]`
 
 ```
 df = {"team":    ["A","A","A","A","B","B","B","B"]
@@ -116,6 +112,7 @@ df[:,:3]  or  df.[:3]
        "points":  [ 5,  7,  7,  9 ]
        "assists": [ 11, 8,  10, 6 ]}
 ```
+Here, `df.[:3]` is equivalent to `df.iloc[:3]` in Pandas.
 
 ## Operators
 
@@ -205,17 +202,23 @@ Noda parses operators from right-to-left in a longest-match clumping pattern: `+
 | `%`  | remainder |`"try-method-x" % "method" == "-x"`     | retains text after 1st substring
 | `-<` | split     |`"2/14/23" -< "/" == ["2","14","23"]`   | splits on pattern (remove delimiter)
 | `+<` | snip      |`"2/14/23" +< "/" == ["2/","14/","23"]` | snips on pattern (keep delimiter)
-| `>-<`| join      |`["a","b","c"] >-< ":" == "a:b:c"`      | joins strings by delimiter
+| `><` | join      |`["a","b","c"] >< ":" == "a:b:c"`       | joins strings by delimiter
 | `==` | match     |`'\d+\.\d+' == "420.69"`                | checks if regex matches string
 | `!=` | unmatch   |`'\d+\.\d+' != "1_000"`                 | checks if regex doesn't match string
 
 * Literal concatenation of strings is valid: `"wind""mill" == "windmill"`
 * Right argument tuples limit to n-times: `"split, me, up" -< (", ", 1) == ["split", "me, up"]`
 * Unary `-<` splits on whitespace: `-<"Jane\n S Smith" == ["Jane", "S", "Smith"]`
-* Unary `>-<` joins without space: `>-<["a","b","c"] == "abc"`
-* Binary `>-<` joins lists too: `["Okay", "but", "why"] >-< [", ", " ", "?"] == "Okay, but why?"`
+* Unary `><` joins without space: `><["a","b","c"] == "abc"`
+* Binary `><` joins lists too: `["Okay", "but", "why"] >< [", ", " ", "?"] == "Okay, but why?"`
+* Regex matching uses `==` and `!=` (match on value, not type), similar to how `1.0 == 1` despite `float` vs `int`
 
-Match operators `~=` and `!~` check whether a regex pattern matches a string. 
+Strings/Regexes are treated as scalars, and not split up in array calculations (unless explicitly forced to). They're like numbers in this sense:
+```
+[1_000, 2_000, 3_000] * 3 === [3_000, 6_000, 9_000]
+["lens", "box", "wish"] * "es" === ["lenses", "boxes", "wishes"]
+```
+Noda is weakly typed when it comes to strings (scalar + string -> string): `3 * "str" == "3str"`
 
 ## Assignment
 [](#table-of-contents)
@@ -297,7 +300,7 @@ lang :=:
     "Java":             print("You can become a mobile app developer")
     _:                  print("The language doesn't matter, what matters is solving problems.")
 ```
-* Loops `::` do a for loop or while loop depending on the condition supplied. If membership is checked (like `in`), it's a for loop. If a condition if checked (`error > 0.00001`), it's a while loop. Use triple colon `:::` to make a do-while loop that runs first without checking.
+* Loops `::` do a for loop or while loop depending on the condition supplied. If membership is checked (like `in`), it's a for loop. If a condition if checked (`error > 0.00001`), it's a while loop. Use triple colon `:::` to make a do-while loop that runs once without checking.
 ```
 name in names::
    key, value in dict::
@@ -309,15 +312,15 @@ error > 0.00001::
     error = curr - prev
 ```
 ## Functional
-`=> >> . :: ->`
+
 [](#table-of-contents)
 | op | name | instance | notes |
 | -- | ----- | ------- | ----- |
 | `=>` | lambda | `x => x + 1` | obviates if/elif keyword
-| `>>` | pipe | `_: do_default` | replaces else keyword
-| `.` | compose | `if_true ? do_this : otherwise` | ternary conditional
-| `::` | type | `if_not_null ?? otherwise` | returns left argument if not null
-| `->` | output | `variable :=: case1: do_x` | switch statement
+| `>>` | pipe | `list >> map` | pipes map to list
+| `.` | compose | `composition = funct1 . funct2` | composes 2 functions together
+| `::` | type | `funct(x::int, y::int)` | explicit typing + multiple dispatch
+| `->` | output | `response(input) -> str` | specifies return type `str`
 
 [](#table-of-contents)
 | object | name | instance | notes |
