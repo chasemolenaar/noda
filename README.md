@@ -1,24 +1,7 @@
 # Noda
 ![image](https://user-images.githubusercontent.com/84992695/221333492-bfdd39e5-1867-4f54-9155-23a60934cdf7.png)
 
-Ever wanted more out of Numpy, Pandas, or PyTorch? Found difficulties manipulating large amounts of data efficiently?
-
-Noda is a supercharged Numpy/PyTorch hybrid, with synactic inspirations everywhere:
-1. Haskell's predicates, maps, and filters
-2. APL/J Combinators, monadic/dyadic operators, reductions/scans, outer/inner products
-3. Ruby and Smalltalk object patterns, function composition
-4. Idris pattern matching
-5. Julia's multiple dispatch, custom operators, and elementwise functions
-6. LISP-like macros
-7. Logical Expressions from Verse
-8. Unification and backtracking from Prolog
-9. Perl's regex pattern matching
-10. Jai switch statements, Python match case
-11. Elixir/Ruby array operators
-12. Optionality and Coalescence from C#
-13. Grade, sort, reverse, max/min operators from BQN
-14. Relational operators from SQL
-15. Elementwise rank polymorphism from Numpy
+Noda is a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirations everywhere:
 
 **Ambitions—**
 ![image](https://user-images.githubusercontent.com/84992695/221332921-04c9609c-f982-4f8e-a1b7-9d1e7f22e6d3.png)
@@ -54,16 +37,17 @@ RANK POLYMORPHISM
 #### Core Ideas
 Noda targets a Python audience, sharing many ideas and constructs. Here's how it compares to Python:
 
-#### Similarites With Python
+#### Similarites To Python
 1. Indices start at 0
-2. Indentation sensitivity (for conditionals and loops)
-3. Pythonic keywords and built-ins are valid
-4. Operations are elementwise on arrays/dataframes
-5. Dict, set, dataframe, tuple, and array syntax
-6. Embeddable, can import Python libraries
-7. Similar OOP, dataclass support, decorators
+2. Slices `start:stop` include `start`, exclude `stop`
+3. Indentation sensitivity (ifs, loops, classes, etc.)
+4. Pythonic keywords and built-ins are valid
+5. Operations are elementwise on arrays/dataframes
+6. Dict, set, dataframe, tuple, and array syntax
+7. Embeddable, can import Python libraries
+8. Similar OOP, dataclass support, decorators
 
-#### Differences With Python
+#### Differences From Python
 1. Comments use `//` and `/* */`
 2. Exponentiation is `^`, floor division is `\`
 3. Stride indexing follows `start:step:stop`
