@@ -17,16 +17,16 @@ OPERATOR OVERVIEW—
 | Comparison | `> < >= <= == != %% === !==` 
 | String | `-< +< ><`
 | Assignment | `= °= := ::= =<`
-| Conditional | `: ><: ?: :: :=: ; ;;`
+| Conditional | `: _: ?: :: :=: ?? !! ; ;;`
 | Functional | `=> -> >> .`
-| Array | `++ -- ** ^^ << \\ <>`
+| Array | `++ -- ** ^^ << \\`
 | Relational | `/\ \/ ~< ~>`
 | Membership | `# @ $`
 | Morphers | `~ $ % ^ * ** \ .`
-| Boolean | `! !! ? ?? && \|\|`
+| Boolean | `! ? && \|\|`
 | Logic | `! & \| >-< <-> <=> ==> >=<`
 | Pattern | `: _ * + ? ?= ?!`
-| Combinator | `!° ~° .°`
+| Combinator | `!° ~° .° <>° (°)`
 | Keywords | `for while in of if elif then else`
 
 \*The degree symbol `°` is used to indicate \[*insert any operator*\]. `//` and `/* */` enclose comments like in C++.
@@ -132,8 +132,8 @@ Noda parses operators from right-to-left in a longest-match clumping pattern: `+
 | `%` | modulo | `11 % 5 == 1` | modulo remainder
 | `^` | power | `2 ^ 3 == 8` | exponent
 | `^/`| root | `3^/125 == 5` | nth root of number
-| `\/`| max | `3 \/ 5 == 3` | maximum value
 | `/\`| min | `3 /\ 5 == 5` | minimum value
+| `\/`| max | `3 \/ 5 == 3` | maximum value
 | `+*`| dot | `u +* v == 0` | matrix multiplication
 | `+-`| plus-minus | `2+-3 == 5,-1` | returns 2 results
 | `-+`| minus-plus | `2-+3 == -1,5` | returns 2 results
@@ -169,7 +169,7 @@ Noda parses operators from right-to-left in a longest-match clumping pattern: `+
 | `<=` | less/equal  | `2 <= 3` | less or equal
 | `==` | equal | `1 == 1.0` | equality (of value)
 | `!=` | unequal | `1 != 1.5` | inequality (of value)
-| `%%` | divisible | `20 %% 5` | remainder is 0
+| `%%` | divisible | `20 %% 5` | true if remainder is 0
 | `===`| equivalence | `1.0 === 1.0` | same objects
 | `!==`| inequivalence | `1 !== 1.0` | different objects
 
@@ -189,8 +189,8 @@ Noda parses operators from right-to-left in a longest-match clumping pattern: `+
 * Escape braces using `\{` and `\}`
 * Raw strings contain no escape sequences: ```filepath = `C:\Documents\Scripts\Test.py` ```
 * Regexes patterns follow the PRCE standard (same as Python and C++)
-* Multiline strings can be written without using triple quotes. Use `\` to escape newline
-* Use triple quotes `"""` to easily escape `"` from text
+* Multiline strings can be written without using triple quotes. Use `\` to escape newlines (like Python)
+* Use triple quotes `"""` to easily escape `"` from text (same for `'''` on regexes)
 
 [](#table-of-contents)
 | op | name | instance | notes |
@@ -202,15 +202,15 @@ Noda parses operators from right-to-left in a longest-match clumping pattern: `+
 | `%`  | remainder |`"try-method-x" % "method" == "-x"`     | retains text after 1st substring
 | `-<` | split     |`"2/14/23" -< "/" == ["2","14","23"]`   | splits on pattern (remove delimiter)
 | `+<` | snip      |`"2/14/23" +< "/" == ["2/","14/","23"]` | snips on pattern (keep delimiter)
-| `><` | join      |`["a","b","c"] >< ":" == "a:b:c"`       | joins strings by delimiter
+| `>-<`| join      |`["a","b","c"] >-< "::" == "a::b::c"`   | joins strings by delimiter
 | `==` | match     |`'\d+\.\d+' == "420.69"`                | checks if regex matches string
 | `!=` | unmatch   |`'\d+\.\d+' != "1_000"`                 | checks if regex doesn't match string
 
-* Literal concatenation of strings is valid: `"wind""mill" == "windmill"`
+* Literal concatenation of strings works: `"wind""mill" == "windmill"` (no space between)
 * Right argument tuples limit to n-times: `"split, me, up" -< (", ", 1) == ["split", "me, up"]`
 * Unary `-<` splits on whitespace: `-<"Jane\n S Smith" == ["Jane", "S", "Smith"]`
-* Unary `><` joins without space: `><["a","b","c"] == "abc"`
-* Binary `><` joins lists too: `["Okay", "but", "why"] >< [", ", " ", "?"] == "Okay, but why?"`
+* Unary `>-<` joins without space: `>-<["a","b","c"] == "abc"`
+* Binary `>-<` joins lists too: `["Okay", "but", "why"] >-< [", ", " ", "?"] == "Okay, but why?"`
 * Regex matching uses `==` and `!=` (match on value, not type), similar to how `1.0 == 1` despite `float` vs `int`
 
 Strings/Regexes are treated as scalars, and not split up in array calculations (unless explicitly forced to). They're like numbers in this sense:
@@ -219,6 +219,7 @@ Strings/Regexes are treated as scalars, and not split up in array calculations (
 ["lens", "box", "wish"] * "es" === ["lenses", "boxes", "wishes"]
 ```
 Noda is weakly typed when it comes to strings (scalar + string -> string): `3 * "str" == "3str"`
+Regexes dominate strings (string + regex -> regex): `'\d+' * " input" == '\d+input'`
 
 ## Assignment
 [](#table-of-contents)
@@ -235,8 +236,12 @@ Noda is weakly typed when it comes to strings (scalar + string -> string): `3 * 
 * Define `:=` can be used on variables (not just functions), thereby creating dependent variables / properties; in `y := x^2 - 2`, y is linked to x, and if x changes, y will be updated with the current value (akin to a nullary function `y()`). In a broader sense, define `:=` is used like Prolog's logical implcation `:-` operator for unification.
 * The last expression in a function is returned (`return` keyword is generally omitted). You can mute this by appending `;`.
 
-Custom operators are defined similarly to functions, but wrapped in parentheses:
-`(⋃)(A,B):= Union(A,B)`
+Custom operators/keywords are defined similarly to functions, but wrapped in parentheses:
+```
+(⋃)(A,B):= Union(A,B)                                  // A ⋃ B
+(send,to)(message,address):= sendoff(message,address)  // send message to address
+```
+
 
 Classes are best explained with an example:
 ```
@@ -259,22 +264,24 @@ Rectangle(Shape)::=
 
 Inheritance works like Python, so `Rectangle(Shape)` inherits properties from `Shape`. The constructor is written with a double underscore `__`, and the `self` keyword is replaced with `o`. In the example, the constructor ingests a `height` and `width`, assigns them to class variables, and keeps a record of the original dimensions. The `resize`, `lengthen`, and `heighten` methods mutate the `Rectangle`'s dimensions by a sizing factor. Meanwhile, `circumference`, `area`, and `diagonal` are all properties of the `Rectangle` which change depending on the current `height` and `width`. 
 
-Class `::=` defintions can be repurposed to structs, dataclasses, traits, and custom types. Class composition is encouraged.
+Class `::=` defintions can be repurposed to structs, dataclasses, traits, and custom types. Class composition (using traits) is encouraged.
 
 ## Conditional
 [](#table-of-contents)
 | op | name | instance | notes |
 | -- | ----- | ------- | ----- |
 | `:` | if/elif | `conditional: do_this` | obviates if/elif keyword
-| `_:` | else | `_: do_default` | replaces else keyword
-| `?:` | ternary | `if_true ? do_this : otherwise` | ternary conditional
+| `><:` | else | `><: do_default` | replaces else keyword
+| `?:` | ternary | `if_true ? do_this : otherwise` | ternary conditional (if-then-else)
 | `??` | coalesce | `if_not_null ?? otherwise` | returns left argument if not null
+| `!!` | assert | `cond === true !! "condition violated"` | triggers assert if false
 | `:=:` | switch | `variable :=: case1: do_x` | switch statement
 | `::` | loop | `name in names::` | for/while loop
 
 * `?:` and `??` work like they're known to in C#
+* Unary `!!` triggers a generic assert error if the condition is unmet
 * Keywords `if`, `elif`, and `else` are all valid like in Python (but generally omitted)
-* Successive colon conditionals `:` create an if-elif chain ending with else/default `_:`
+* Successive colon conditionals `:` create an if-elif chain ending with else/default `><:`
 ```csharp
 //Keyword chain of if-elif-else
 if conditional1:     do_thing1
@@ -286,19 +293,19 @@ else:                do_thing4
 conditional1:     do_thing1
 conditional2:     do_thing2
 conditional3:     do_thing3
-_:                do_thing4
+><:               do_thing4
 ```
 * Switch case `:=:` creates nested conditionals matching against the variable given:
 ```
 lang = input("What's the programming language you want to learn? ")
 
 lang :=:
-    "JavaScript"|"JS":  print("You can become a web developer.")
-    "Python":           print("You can become a Data Scientist")
-    "C++"|"Go":         print("You can become a backend developer")
-    "Solidity":         print("You can become a Blockchain developer")
-    "Java":             print("You can become a mobile app developer")
-    _:                  print("The language doesn't matter, what matters is solving problems.")
+    "JavaScript"|"JS":  print("Become a web developer")
+    "Python":           print("Become a Data Scientist")
+    "C++"|"Go":         print("Become a backend developer")
+    "Solidity":         print("Become a Blockchain developer")
+    "Java":             print("Become a mobile app developer")
+    ><:                 print("The language doesn't matter, what matters is solving problems")
 ```
 * Loops `::` do a for loop or while loop depending on the condition supplied. If membership is checked (like `in`), it's a for loop. If a condition if checked (`error > 0.00001`), it's a while loop. Use triple colon `:::` to make a do-while loop that runs once without checking.
 ```
@@ -311,6 +318,8 @@ error > 0.00001::
     curr = gradient_descent(curr)
     error = curr - prev
 ```
+The `for` and `while` keywords are optional for Pythonic-style programming, but not necessary. For loops are generally frowned upon, as there's almost always a vectorized (and thereby optimized) way of handling calculations.
+
 ## Functional
 
 [](#table-of-contents)
