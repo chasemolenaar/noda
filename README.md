@@ -15,16 +15,16 @@ OPERATOR OVERVIEW—
 | Indexing | `: +: -:`
 | Arithmetic | `+ - * / \ % ^ ^/ /\ \/ +* +- -+`
 | Comparison | `> < >= <= == != %% === !==` 
-| String | `-< +< ><`
-| Assignment | `= °= := ::= =<`
-| Conditional | `: _: ?: :: :=: ?? !! ; ;;`
+| String | `-< +< >-<`
+| Assignment | `= °= =< := ::=`
+| Conditional | `: ><: ?: ?? !! :: :=: ; ;;`
 | Functional | `=> -> >> .`
 | Array | `++ -- ** ^^ << \\`
 | Relational | `/\ \/ ~< ~>`
 | Membership | `# @ $`
-| Morphers | `~ $ % ^ * ** \ .`
+| Morphers | `~ % ^ * ** \ .`
 | Boolean | `! ? && \|\|`
-| Logic | `! & \| >-< <-> <=> ==> >=<`
+| Logic | `! & \| >< <=> >=<`
 | Pattern | `: _ * + ? ?= ?!`
 | Combinator | `!° ~° .° <>° (°)`
 | Keywords | `for while in of if elif then else`
@@ -81,7 +81,7 @@ Sets `{}` and tuples `()` behave similarly to Python—sets are unordered, tuple
 | slice | equivalent        | notes |
 | ----- | ----------------- | ----- |
 | `[:5]` | `[0,1,2,3,4]`    | 0-5 exclusive
-| `[1:9:2]` | `[1,3,5,7]`   | 1-9, stepwise 2
+| `[1:2:9]` | `[1,3,5,7]`   | 1-9, stepwise 2
 | `[-4:]` | `[-4,-3,-2,-1]` | -4-0 exclusive
 | `[:2:]` | `[0,2,4,6,8..]` | unbounded, stepwise 2
 | `[3:]`  | `[3,4,5,6,7..]` | numbers 3+
@@ -97,7 +97,7 @@ All arrays/lists `[]` are n-dimensional arrays, and mimic the conventions of Num
 X = [[1,2,3],[4,5,6]]
 X[1]      [4,5,6]         // 2nd row              
 X[:,0]    [[1],[4]]       // 1st column        
-X[:,0:1]  [[1,2],[4,5]]   // 1st & 2nd column        
+X[:,0:2]  [[1,2],[4,5]]   // 1st & 2nd column        
 ```
 Arrays of 2+ dimensions can use `;` to delimit columns instead of nested arrays: `[[1,2],[4,5]] === [1,2; 4,5]`
 
@@ -107,12 +107,12 @@ df = {"team":    ["A","A","A","A","B","B","B","B"]
       "assists": [ 11, 8,  10, 6,  6,  5,  9,  12]}
 ```
 ```
-df[:,:3]  or  df.[:3]
+df[:,:4]  or  df.[:4]
       {"team":    ["A","A","A","A"]
        "points":  [ 5,  7,  7,  9 ]
        "assists": [ 11, 8,  10, 6 ]}
 ```
-Here, `df.[:3]` is equivalent to `df.iloc[:3]` in Pandas.
+Here, `df.[:4]` is equivalent to `df.iloc[:4]` in Pandas, which grabs the first 4 rows of the dataframe.
 
 ## Operators
 
@@ -242,8 +242,7 @@ Custom operators/keywords are defined similarly to functions, but wrapped in par
 (send,to)(message,address):= sendoff(message,address)  // send message to address
 ```
 
-
-Classes are best explained with an example:
+Classes are best explained by example:
 ```
 Rectangle(Shape)::=
     __(o,height,width):=
@@ -277,8 +276,10 @@ Class `::=` defintions can be repurposed to structs, dataclasses, traits, and cu
 | `!!` | assert | `cond === true !! "condition violated"` | triggers assert if false
 | `:=:` | switch | `variable :=: case1: do_x` | switch statement
 | `::` | loop | `name in names::` | for/while loop
+| `;`  | inline | `x = 2; y = 3` | execute multiple statements inline
+| `;;` | break | `loop:: if_this: ;;` | break operator
 
-* `?:` and `??` work like they're known to in C#
+* `?:` and `??` work like they're known to in C#/JavaScript
 * Unary `!!` triggers a generic assert error if the condition is unmet
 * Keywords `if`, `elif`, and `else` are all valid like in Python (but generally omitted)
 * Successive colon conditionals `:` create an if-elif chain ending with else/default `><:`
@@ -318,7 +319,7 @@ error > 0.00001::
     curr = gradient_descent(curr)
     error = curr - prev
 ```
-The `for` and `while` keywords are optional for Pythonic-style programming, but not necessary. For loops are generally frowned upon, as there's almost always a vectorized (and thereby optimized) way of handling calculations.
+The `for` and `while` keywords are optional for Pythonic-style programming, but not necessary. For loops are generally frowned upon, as there's almost always a vectorized (and thereby optimized) way of handling calculations. The number of semicolons in the break operator `;;` indicates how many nested levels it can break from, which can be handy.
 
 ## Functional
 
@@ -326,22 +327,43 @@ The `for` and `while` keywords are optional for Pythonic-style programming, but 
 | op | name | instance | notes |
 | -- | ----- | ------- | ----- |
 | `=>` | lambda | `x => x + 1` | obviates if/elif keyword
-| `>>` | pipe | `list >> map` | pipes map to list
+| `>>` | pipe | `list >> map` | list piped to map operation
 | `.` | compose | `composition = funct1 . funct2` | composes 2 functions together
 | `::` | type | `funct(x::int, y::int)` | explicit typing + multiple dispatch
 | `->` | output | `response(input) -> str` | specifies return type `str`
+
+* Lambda `=>` can be used to create anonymous functions like in JavaScript, but this is discouraged since inline function declarations `:=` are clearer
+* Dispatch `::` executes a multiple dispatch version of the function depending on type supplied
+* Similar to `:`, enforced output types are available
 
 [](#table-of-contents)
 | object | name | instance | notes |
 | -- | ----- | ------- | ----- |
 | `()` | filter | `list(>0)` | filters positive list values
 | `[]` | map | `list[_+1]` | adds 1 to each item in list
-| `{}` | filtermap | `list{"(": 1, ")": -1}` | find and replace parentheses with numbers
+| `{}` | replace | `list{"(": 1, ")": -1}` | find and replace parentheses with numbers
 
 * Filters can omit underscore `_` if a comparator appears first; the above can be expanded into `list(_>0)`
-* Filters must 
+* Filters must evaluate to `true/false`, if not they are coerced into truthy/falsy values
 * Maps and filters can use the arrow `=>` for named lambdas: `options(opt => !opt.assigned)`
 * Both can be assigned as their own data structures: `half_map = [_/2]; filter_even = (_%%2)`
+* 2 versions of replace exist: dict `{}` replacements keep all unmatched values unchanged
+* Whereas filtermaps `()` only keep the matched values, discarding all others
+
+Pipe `>>` behaviors differs based on the argument supplied:
+
+[](#table-of-contents)
+| combination | example | output | 
+| ----------- | ------- | ------ |
+| `array >> map` | `[1,2,3] >> [_+1] === [2,3,4]` | map array values
+| `array >> filter` | `[1,2,3] >> (>1) === [2,3]` | filter array
+| `array >> dict`  | `[1,2,3] >> {1: "one"} === ["one",2,3]` | apply filtermap / find and replace
+| `array >> array` | `[1,2,3,4] >> [_,3|4] === [[2,3],[3,4]]` | find matching subarrays
+| `string >> string` | `"canadian" >> "an" === ["an","an"]` | find matching substrings
+| `string >> regex` | `"123def456" >> '\d+' === ["123","456"]` | find matching substrings
+| `function >> function` | `order_words = split >> sort` | compose functions
+| `object >> function` | `str >> capitalize` | apply function to object (like a method would)
+| `class >> class` | `RubberDuck >> Quack` | implement trait for a class
 
 #### Array/Setwise
 
@@ -349,58 +371,64 @@ The `for` and `while` keywords are optional for Pythonic-style programming, but 
 | op | name | instance | notes |
 | -- | ----- | ------- | ----- |
 | `++` | union | `[1,2] ++ [3,4] == [1,2,3,4]` | concatenates 2 arrays
-| `--` | difference | `[1,2,3,4] -- [2,4] == [1,3]` | removes each item from 1st array
+| `--` | difference | `[1,2,3,4] -- [2,4] == [1,3]` | removes each matching item from 1st array
 | `**` | intersection | `[1,2,3,4] ** [3,4,5,6] == [3,4]` | returns shared items
 | `^^` | symmetric difference | `[1,2,3,4] ^^ [3,4,5,6] == [1,2,5,6]` | returns unshared items
-| `\\` | remove | `[1,2,3,4] \\ 1 == [2,3,4]` | removes single item
-| `<<` | append | `[1,2,3] << 4 == [1,2,3,4]` | appends single item
-| `>>` | juxtapose | `[1,2,3] >> [0,1] == [1,2,3][0,1]` | affixes right argument
-| `,,` | zip | `[1,2,3] ,, [4,5,6] == [[1,4],[2,5],[3,5]]` | zips arrays into nested arrays
-| `::` | rank | `sum(matrix::1)` | sums matrix according to axis = 1
+| `\\` | remove | `[1,2,3,4] \\ 1 == [2,3,4]` | removes first occurence of item
+| `<<` | append | `[1,2,3] << 4 == [1,2,3,4]` | appends single item to the end
 
 * Union `++` performs an rbind by default (axis = 0)
 * Difference `--` removes elements by matching values
-* Intersection `**` populates an empty list/set for every item shared. Duplicates are possible.
-`12>>34 == 1234`
-Should `,;` be used here?
+* Intersection `**` populates an empty array/set for every item shared. Duplicates are possible with array intersection.
+* On higher dimensional arrays, append `<<` affixes on the 1st dimension (always rows)
+* Meanwhile, union `++` affixes on the last dimension (columns for 2D matrices)
 
-#### Modifiers
+### Morphers
 
 [](#table-of-contents)
 | op | name | instance | notes |
 | -- | ----- | ------- | ----- |
-| `~` | complement | `~[3:] == [:3)` | complement slice / regex
-| `<~>` | rotate | `[1,2,3,4] <~> 1 == [2,3,4,1]` | rotates array n-times
-| `->>` | reshape | `[1:4] ->> [2,2] == [[1,2],[3,4]]` | reshapes array by dimensions
-| `+>` | repeat | `[0,1] +> 3 == [0,1,0,1,0,1]` | concats array to itself n-times
+| `^` | reverse | `^[1,2,3] === [3,2,1]` | reverses order of items
+| `%` | unique | `%[1,2,1,4,2,8] === [1,2,4,8]` | removes duplicates
+| `~` | complement | `~[0,3,7] === [1:3,4:7,8:]` | retrieves complement object
+| `*` | unpack | `*[1,2,3] === 1,2,3` | unpacks values
+| `**` | unpack | `**dict === k1: v1, k2: v2` | unpacks key-value pairs
+| `.` | each | `.[[1,2],[0,0]] << 3 === [[1,2,3],[0,0,3]]` | applies operation to each element
 
-Unary rotate `<~>` reverses an array/string: `<~>[1,2,3] == [3,2,1]; <~>"live" == "evil"`. Rank `::` is identical to it's usage in other array languages like APL and J. 
+* Caret `^` reverses along rows (0th dimension) on matrices by default 
+* Unique `%` retains the order of 1st unique occurence
+* Complement `~` has special behaviors depending on the object complemented
++ Integer array — complement indices `~[0,3,7] === [1:3,4:7,8:]` and `~[-5,-3] === [:-5,-4,-2:]`
++ Boolean — flips boolean values `~T === F` and `~[T,F,T] === [F,T,F]`
++ Regex — retrieves everything *not* matching regex `~'^.*substring.*$' == '^(?:(?!substring).)*$'`
++ Float — gets complement percentage 1-n `~0.6 == 0.4`
 
 #### Membership
 
 [](#table-of-contents)
 | op | name | instance | notes |
 | -- | ----- | ------- | ----- |
-| `#` | length | `#[1,2,3,4] == 4` | length along first axis 
-| `%` | shape | `%[[1,2,3],[4,5,6]] == [2,3]` | shape of matrix/dataframe
+| `#` | length | `#[1,2,3,4] === 4` | length along first axis
+| `#` | replicate | `[1,2] # 3 === [1,2,1,2,1,2]` | replicates list 3x
 | `@` | in | `1 @ [[1,2],[3,4]]` | checks if scalar exists in collection
-| `$` | subset | `[2,3] $ [1,2,3,4]` | checks if subsequence/subset exists
-| `>->` | starts | `[1,2] >-> [1,2,3,4]` | checks if subsequence is at the start
-| `<-<` | ends | `[3,4] <-< [1,2,3,4]` | checks if subsequence is at the end
+| `$` | sub | `[2,3] $ [1,2,3,4]` | checks if subarray/set/string exists
 
-#### Maps & Filters
+* For tensors/matrices, length `#` checks along the first dimension (rows)
+* Postfix `[]` to get shape: `[[1,2,3],[4,5,6]][] === [2,3]`
+* Postfix `()` to get values: `dict() === dict.values`
+* Postfix `{}` to get indices/keys: `dict{} === dict.keys`
 
-[](#table-of-contents)
-| op | name | instance | notes |
-| -- | ----- | ------- | ----- |
-| `[]` | map | `[4,5,6,7][_+2] == [6,7,8,9]` | maps values + 2
-| `{}` | filter | `[4,5,6,7]{_%%2} == [4,6]` | filter even values (%% 2)
-| `()` | index | `[4,5,6,7](_>=6) == [2,3]` | indices of values (>= 6)
-| `=>` | arrow | `[1,2,3][x => x*2] == [2,4,6]` | mapping with named variable x
-| `:`  | colon | `[1,2,3,4]{_%%2: _*10} == [1,20,3,40]` | 10x even numbers
-| `?:` | cond  | `[1,2,3,4]{_%%2?: _*10} == [20,40]` | remove unmatched values
+Sub `$` checks subarrays, subsets, and substrings. It can do this along multiple axes at once:
+```
+[[1,2]   $   [[1,2,3]
+ [4,5]]       [4,5,6]
+              [7,8,9]]
+              
+"++" $ ["x++", "x--", "x++"]
+```
+The 1st example checks the submatrix, even though it is not a direct sequence of elements like `[1,2,3]`. Same goes for the 2nd example, which is checking a nested substring `"++"` within a list of strings.
 
-#### Conditional
+## Boolean
 
 [](#table-of-contents)
 | op | name | instance | notes |
@@ -410,12 +438,13 @@ Unary rotate `<~>` reverses an array/string: `<~>[1,2,3] == [3,2,1]; <~>"live" =
 | `&&` | and | `false && true == false` | short-circuit and
 | `\|\|` | or | `false \|\| true == true` | short-circuit or
 
-* Truthy/Falsy rules follow the conventions of Python
-* Existence `??` returns `false` if an error occurs (like a failed key-value reference)
 * Use `T`, `F`, `U` shorthands for `true`,`false`,`null`
-// ?? is also the coalesce operator, and ?= is the initialize operator
-//1_000 T F U I o oo O 
-
+* Truthy/Falsy rules mimic Python — empty == falsy, 0 is falsy, etc.
+* Conditionals coerce to truthy values if not already boolean
+* Combine truthy into `?.` to apply elementwise on lists: `?.[-1,0,1,2,0] === [T,F,T,T,F]`
+* Existence `??` returns `false` if null, `true` otherwise
+* Short-circuit and `&&` returns `false` if its first argument is `false`
+* Short-circuit or `||` returns `true` if its first argument is `true`
 
 #### Logex
 
