@@ -365,7 +365,7 @@ Pipe `>>` behaviors differs based on the argument supplied:
 | `object >> function` | `str >> capitalize` | apply function to object (like a method would)
 | `class >> class` | `RubberDuck >> Quack` | implement trait for a class
 
-#### Array/Setwise
+### Array/Setwise
 
 [](#table-of-contents)
 | op | name | instance | notes |
@@ -382,6 +382,18 @@ Pipe `>>` behaviors differs based on the argument supplied:
 * Intersection `**` populates an empty array/set for every item shared. Duplicates are possible with array intersection.
 * On higher dimensional arrays, append `<<` affixes on the 1st dimension (always rows)
 * Meanwhile, union `++` affixes on the last dimension (columns for 2D matrices)
+
+### Sorting
+
+[](#table-of-contents)
+| op | name | instance | notes |
+| -- | ----- | ------- | ----- |
+| `/\` | sort up | `/\[5,3,1,4,2] === [1,2,3,4,5]` | sorts ascending
+| `\/` | sort down | `\/[5,3,1,4,2] === [5,4,3,2,1]` | sorts descending
+| `~<` | grade up | `~<[5,3,1,4,2] === [4,2,0,3,1]` | indices of ascending positions
+| `~>` | grade down | `~>[5,3,1,4,2] === [0,2,4,1,3]` | indices of ascending positions
+
+* Sorting operators sort strings and arrays of strings alphabetically `/\["banana","coconut","apple"] === ["apple","banana","coconut"]`
 
 ### Morphers
 
@@ -402,6 +414,7 @@ Pipe `>>` behaviors differs based on the argument supplied:
 + Boolean — flips boolean values `~T === F` and `~[T,F,T] === [F,T,F]`
 + Regex — retrieves everything *not* matching regex `~'^.*substring.*$' == '^(?:(?!substring).)*$'`
 + Float — gets complement percentage 1-n `~0.6 == 0.4`
+* Each `.` only goes 1 dimension deep; if more dimensions are desired, use rank parameters (addressed in later sections)
 
 #### Membership
 
@@ -446,7 +459,7 @@ The 1st example checks the submatrix, even though it is not a direct sequence of
 * Short-circuit and `&&` returns `false` if its first argument is `false`
 * Short-circuit or `||` returns `true` if its first argument is `true`
 
-#### Logex
+## Logex
 
 [](#table-of-contents)
 | op | name | instance | notes |
@@ -457,10 +470,12 @@ The 1st example checks the submatrix, even though it is not a direct sequence of
 | `!&` | nand | `0!&1 @ [1,2,3,4]` | not both 0 and 1 in array
 | `!\|` | nor | `0!\|5 @ [1,2,3,4]` | neither 0 nor 5 in array
 | `><` | xor  | `0><1 @ [1,2,3,4]` | either 0 or 1 in array, but not both
-| `->` | imply | `1->2 @ [1,2,3,4]` | 1 in array implies 2 also in array
-| `<->` | iff | `1<->2 @ [1,2,3,4]` | both 1 and 2, or neither (xnor)
 
-#### Metalogic
+Not `!` logically negates the object, not the value. In any evaluation returning `true`, the notted object returns `false`. It is not simply flipping `true` values to `false` and vice versa. This highlights the difference between `~` and `!`. For instance: `![T,F] === [T,T]` is `true` because `[T,F]` doesn't match `[T,T]`. But `~[T,F] => [F,T] === [T,T]` is `false` because the flipped booleans don't match `[T,T]`. 
+
+Logexes (logical expressions) are thus logical objects representing many cohabiting possibilities. Logex operators have very high precedence. Everything is a logex by definition — any object is considered a logex of *itself*.
+
+## Metalogic
 
 [](#table-of-contents)
 | op | name | instance | notes |
@@ -469,20 +484,24 @@ The 1st example checks the submatrix, even though it is not a direct sequence of
 | `==>` | implication | `1&2 ==> 1\|2` | if both, then either is also true
 | `>=<` | inequivalence | `1&2 >=< 3\ |4` | different logical universes
 
-#### Forks
+While `!2 === 3` is `true`, `!2 <=> 3` is `false`, since they don't represent the same logical universes. `!2` is *everything* except `2`, `3` is just `3`.
 
+Equivalence `<=>` is useful in scenarios where `===` only matches across arrays/patterns, but not the same fundamental objects.
+
+## Pattern
 [](#table-of-contents)
 | op | name | instance | notes |
 | -- | ----- | ------- | ----- |
-| `+-` | plus-minus | `2+-3 == 5,-1` | expands into 2 values
-| `-+` | implication | `2-+3 == -1,5` | reverse order
-| `°,°` | comma fork | `2+,*3 == 2+3,2*3 == 5,6` | branches along operator choices
-| `°&°` | and fork | `2+&*3 == (2+3)&(2*3) == 5&6` | branches along operator choices
-| `°\|°` | or fork | `2+\|*3 == (2+3)\|(2*3) == 5\|6` | branches along operator choices
-| `^` | identity | `+|^"123" == 123|"123"` | returns self
-| `?` | optional | `"word" ?|* "s" == "word"|"words"` | returns left argument
+| `:` | wildcard | `[:] === [123]|["ignore"]` | matches anything
+| `_` | match | `[_,_/2] === [2,1]|[6,3]` | matches each tracked occurence
+| `*` | 0* | `[1,:*,5] === [1,5]|[1,2,3,4,5]|[1,"ignore",5]` | matches wildcard 0* times
+| `+` | 1+ | `[1,:+,5] === [1,2,3,4,5]|[1,"ignore",5]` | matches wildcard 1+ times
+| `?` | optional | `[1,2?,3] === [1,3]|[1,2,3]` | matches 0 or 1 times
+| `?=` | lookback | `[?=5,6,7] === [6,7]` | matches pattern following lookback
 
-#### Combinators
+Pattern syntax steals from Numpy and regex syntaxes to bring regular expressions to the array realm.
+
+## Combinators
 
 [](#table-of-contents)
 | op | name | instance | notes |
@@ -491,13 +510,29 @@ The 1st example checks the submatrix, even though it is not a direct sequence of
 | `.°` | inner | `[1,2] .* [3,4] == [3,8]` | inner product
 | `<>°` | outer | `[1,2] <>+ [0,10] == [[1,2],[11,12]]` | outer sum
 | `~°` | swap | `a ~* b == b * a` | swaps operator order / associativity
-| `[°]` | scan | `[+][1,2,3,4] == [1,3,6,10]` | scans along axis applying operator
-| `°:` | increment | `[1+:2] == [1:3]` | increments length by difference
+| `(°)` | scan | `[1,2,3,4](+) == [1,3,6,10]` | cumulative sum scan
 
-Unary `.°` does reductions. So `.+` is a sum: `.+[1,2,3] == 6`. `.==` checks whether every element is equal: `.==[1,1,1,1] == true`. 
+Combinators are special operators which can combine with other operators for *special effects*. 
 
+* `!°` can combine with any operator, but is typically reserved for conditionals/booleans. Curiously, `!?:` can make a notted ternary conditional.
+* Binary `.°` is fairly unnecessary for arithmetic/comparators (which are already elementwise). Array/membership is more like it: `.@`, `.$`, `.++`, `.**` 
+* Unary `.°` does reductions. So `.+` is a sum: `.+[1,2,3] == 6`. `.==` checks whether every element is equal: `.==[1,1,1,1] == true`. 
+* `<>°` pairs up each scalar from the 1st with every combination from the 2nd
+* `~°` swaps associativity of operators, and `.~°` does a right-fold reduction (as opposed to left-fold default)
+
+Scans follow a rule: `data(operator, window)`, where the `window` is optional:
+```
+[1,2,3,4,5](+)   === [1,3,6,10,15]               //does a rightward plus scan of the entire list
+[1,2,3,4,5](*,2) === [2,6,12,20]                 //does a pairwise product
+[1,2,3,4,5](:,3) === [[1,2,3],[2,3,4],[3,4,5]]   //grabs moving windows of size 3
+[1,2,3,4](:) === [[1],[1,2],[1,2,3],[1,2,3,4]]   //grabs expanding window subarrays
+```
 
 ### Examples
+
+The examples section here is scant, and will be filled soon with tried and true examples. For those of you impatient, please check out ChatGPT's fairly accurate attempts at solving Noda programming questions— https://imgur.com/gallery/Tqh7SRH
+
+
 #### Entitle String
 Task: Capitalize each word in a lowercase string.
 ```csharp
@@ -573,14 +608,14 @@ def num_factors(n):
 Task: Convert number 0-6 to day of the week (string).
 ```csharp
 day(num):=
-      num ==:
-            0:  "Monday"
-            1:  "Tuesday"
-            2:  "Wednesday"
-            3:  "Thursday"
-            4:  "Friday"
-            5:  "Saturday"
-            6:  "Sunday"
+   num :=:
+      0:  "Monday"
+      1:  "Tuesday"
+      2:  "Wednesday"
+      3:  "Thursday"
+      4:  "Friday"
+      5:  "Saturday"
+      6:  "Sunday"
             
 day(3)      //"Thursday"
 ```
@@ -628,9 +663,9 @@ progress_dots(0.8)
 
 prime_counter(P):= #[2:P]{.!|(_%%[2:_))}
 
-pascal_triangle(n):= [:n]!![:[:n]]
+pascal_triangle(n):= C([:n],[:[:n]])
 
-diff(g):= .+(2g-1)::0 <>+ .+(2g-1)::1
+diff(g):= .+(2g-1)(0) <>+ .+(2g-1)(1)
 
 pluralize(word):= word * ("ch"|"sh"|"s"|"x"|"z"<-<word ? "es" : "s")
 
@@ -642,13 +677,11 @@ npv = .+(costs./(1+r)^[0:])
 norm(X):= ^/.+X.^2
 softmax(X):= e^X/.+e^X
 
-checkMatrix(m):= (1\/m)==(I(m)/\<~>I(m))
+checkMatrix(m):= (1/\m) === (I(m)\/^I(m))
 
 [][1,2,3,4] == [[1],[1,2],[1,2,3],[1,2,3,4]]
 {}[1,2,3,4]
 
-(-*4.:strs)(%_==4)[0]	# New algorithm?
-(-*4.:strs)(#_==4)[0]	// Old algorithm?
 str(:,4)(-*_==_)[0]
 
 //for scans—
