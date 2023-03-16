@@ -16,17 +16,16 @@ OPERATOR OVERVIEW—
 | Arithmetic | `+ - * / \ % ^ ^/ /\ \/ +* +- -+`
 | Comparison | `> < >= <= == != %% === !==` 
 | String | `-< +< >-<`
-| Assignment | `= °= =< := ::=`
-| Conditional | `: ><: ?: ?? !! :: :=: ; ;;`
-| Functional | `=> -> >> .`
-| Array | `++ -- ** ^^ << \\`
+| Assignment | `= °= =< := ::= => ->`
+| Conditional | `: ><: _: ?: ?? !! :: :=: ; ;;`
+| Array | `++ -- ** ^^ \\ << >> <>`
 | Relational | `/\ \/ ~< ~>`
 | Membership | `# @ $`
 | Morphers | `~ % ^ * ** \ .`
 | Boolean | `! ? && \|\|`
 | Logic | `! & \| >< <=> >=<`
 | Pattern | `: _ * + ? ?= ?!`
-| Combinator | `!° ~° .° <>° (°)`
+| Combinator | `!° ~° .° (°)`
 | Keywords | `for while in of if elif then else`
 
 \*The degree symbol `°` is used to indicate \[*insert any operator*\]. `//` and `/* */` enclose comments like in C++.
