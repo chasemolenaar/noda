@@ -12,23 +12,22 @@ OPERATOR OVERVIEW—
 [](#table-of-contents)
 | Family | Operators |
 | ------ | --------- |
+| Arithmetic | `+ - * / \ % ^ ^/ /\ \/`
 | Indexing | `: +: -:`
-| Arithmetic | `+ - * / \ % ^ ^/ /\ \/ +* +- -+`
-| Comparison | `> < >= <= == != %% === !==` 
-| String | `-< +< >-<`
-| Assignment | `= °= =< := ::= => ->`
-| Conditional | `: ><: _: ?: ?? !! :: :=: ; ;;`
-| Array | `++ -- ** ^^ \\ << >> <>`
-| Relational | `/\ \/ ~< ~>`
+| Comparison | `> < >= <= == != ~= !~ %%` 
+| Array | `++ -- ** ^^ ,, \\ << >>`
+| String | `-< <> * ^ / \ %`
+| Assignment | `= ⎵= := ::= :=: =< => ->`
+| Conditional | `: ><: :: ?: _: ?? !! ; ;;`
 | Membership | `# @ $`
 | Morphers | `~ % ^ * ** \ .`
-| Boolean | `! ? && \|\|`
+| Boolean | `? && \|\|`
 | Logic | `! & \| >< <=> >=<`
-| Pattern | `: _ * + ? ?= ?!`
-| Combinator | `!° ~° .° (°)`
-| Keywords | `for while in of if elif then else`
+| Pattern | `_ : ⎵+ ⎵* ⎵? ?= ?!`
+| Combinator | `.⎵ °⎵ ~⎵ !⎵ (⎵)`
+| Port | `>-> -> <-< $`
 
-\*The degree symbol `°` is used to indicate \[*insert any operator*\]. `//` and `/* */` enclose comments like in C++.
+\*The bottom bracket `⎵` is used to indicate \[*insert any operator*\]. `//` and `/* */` enclose comments like in C++.
 
 RANK POLYMORPHISM
 
@@ -37,31 +36,34 @@ Noda is a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirations e
 
 #### Similarites To Python
 1. Indices start at 0
-2. Slices `start:stop` include `start`, exclude `stop`
-3. Indentation sensitivity (ifs, loops, classes, etc.)
-4. Pythonic keywords and built-ins are valid
-5. Operations are elementwise on arrays/dataframes
-6. Dict, set, dataframe, tuple, and array syntax
-7. Embeddable, can import Python libraries
+2. Slices `start:stop` includes `start`, excludes `stop`
+3. Strides `start:stop:step` such as `::each` 
+4. Indentation sensitivity (ifs, loops, classes, etc.)
+5. Pythonic keywords and built-ins are valid
+6. Dict, Set dataframe, tuple, and array syntax
+7. Embeddable, can import Python libraries 
 8. Similar OOP, dataclass support, decorators
+9. File and import system frameworks
 
 #### Differences From Python
 1. Comments use `//` and `/* */`
 2. Exponentiation is `^`, floor division is `\`
-3. Stride indexing follows `start:step:stop`
-4. Function `:=` and class `::=` definition operators
+3. \____________________________________________
+4. Function `:=` and Class `::=` definition operators
 5. Strings use quotes `""`, regexes use apostrophes `''`
-6. Lists are arrays `[]`, dicts are dataframes `{}`
+6. Lists == Arrays `[]`, Dicts == Dataframes `{}`
 7. Expanded suite of array, string, and logic operators
 8. C# operators like `??`, `?:`, `?.`, and lambdas `=>`
 9. Asserts `!!` and unit testing semantics
 10. Simplified OOP syntax, function/method composition `.`
-11. Predicates `(>0)`, maps `[_+2]`, reductions `.+X`, functors
-12. Implicit conditionals / returns, switch statements `:=:`
+11. Filters `(>0)`, maps `[_+2]`, reductions `.+X`, functors
+12. Implicit conditionals / returns, switch statements `?:`
 13. Enforced type hints, refinement/gradual typing `::`
-14. Advanced pattern matching + logical expressions
-15. Uniform function call syntax
+14. Advanced pattern matching + logical expressions `?=`
+15. Uniform function call syntax `list.f()`
 16. Everything is a function / is a callable
+17. Enforced \_protected and \_\_private variables
+18. No global state—relies on Effect System (like Koka)
 
 ## Basic Data Structures
 
