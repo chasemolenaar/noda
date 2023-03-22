@@ -17,15 +17,15 @@ OPERATOR OVERVIEW—
 | Comparison | `> < >= <= == != ~= !~ %%` 
 | Array | `++ -- ** ^^ ,, \\ << >>`
 | String | `-< <> * ^ / \ %`
-| Assignment | `= ⎵= := ::= :=: =< => ->`
 | Conditional | `: ><: :: ?: _: ?? !! ; ;;`
+| Assignment | `= ⎵= := ::= :=: =< => ->`
 | Membership | `# @ $`
 | Morphers | `~ % ^ * ** \ .`
 | Boolean | `? && \|\|`
 | Logic | `! & \| >< <=> >=<`
 | Pattern | `_ : ⎵+ ⎵* ⎵? ?= ?!`
 | Combinator | `.⎵ °⎵ ~⎵ !⎵ (⎵)`
-| Port | `>-> -> <-< $`
+| Port | `$ >-> -> <-<`
 
 \*The bottom bracket `⎵` is used to indicate \[*insert any operator*\]. `//` and `/* */` enclose comments like in C++.
 
