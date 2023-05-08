@@ -14,15 +14,14 @@ OPERATOR OVERVIEW—
 | ------ | --------- |
 | Arithmetic | `+ - * / \ % ^ ^/ /\ \/`
 | Indexing | `: +: -:`
-| Comparison | `> < >= <= == != ~= !~ %%` 
-| Array | `++ -- ** ^^ ,, \\ << >>`
-| String | `-< <> * ^ / \ %`
+| Comparison | `> < >= <= == != %%` 
+| Array | `++ -- ** ^^ \\ << >>`
+| String | `* ^ / \ %`
 | Conditional | `: ><: :: ?: _: ?? !! ; ;;`
 | Assignment | `= ⎵= := ::= :=: =< => ->`
 | Membership | `# @ $`
 | Morphers | `~ % ^ * ** \ .`
-| Boolean | `? && \|\|`
-| Logic | `! & \| >< <=> >=<`
+| Logic | `? ! & \| >< <=> >=<`
 | Pattern | `_ : ⎵+ ⎵* ⎵? ?= ?!`
 | Combinator | `.⎵ °⎵ ~⎵ !⎵ (⎵)`
 | Port | `$ >-> -> <-<`
@@ -32,7 +31,7 @@ OPERATOR OVERVIEW—
 RANK POLYMORPHISM
 
 ## Core Ideas
-Noda is a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirations everywhere. We target a Python audience, sharing many ideas and constructs. Here's how it compares to Python:
+Noda is a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirations across the programming language landscape. We target a Python audience, sharing many ideas and constructs. Here's how it compares to Python:
 
 #### Similarites To Python
 1. Indices start at 0
@@ -77,7 +76,7 @@ Noda is a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirations e
 | `[:]`| slice | `[1:5]` | iterable
 | `{}` | dict | `{"a": 1, "b": 2}` | dict and dataframe
 
-Sets `{}` and tuples `()` behave similarly to Python—sets are unordered, tuples are immutable. Rings `[)` are like lists, but loop back on themselves and are indexable anywhere: `[0,1,2,3)[4] => [0,1,2,3)[0] => 0`. Like Numpy, arrays are n-dimensional and can be used for matrix operations. However, they may contain multiple datatypes at once, and not be rectangular (e.g. differing lengths of rows). Slices are iterables like `start:stop`, includes `start` but excludes `stop`. Strides are similar, but the `step` size is in the middle: `start:step:stop`. Use `+:` and `-:` to set forward and backward slicing windows—
+Sets `{}` and tuples `()` behave similarly to Python—sets are unordered, tuples are immutable. Rings `[)` are like lists, but loop back on themselves and are indexable anywhere: `[0,1,2,3)[4] == [0,1,2,3)[0] == 0`. Like Numpy, arrays are n-dimensional and can be used for matrix operations. However, they may contain multiple datatypes at once, and not be rectangular (e.g. differing lengths of rows). Slices are iterables like `start:stop`, includes `start` but excludes `stop`. Strides are similar, but the `step` size is in the middle: `start:step:stop`. Use `+:` and `-:` to set forward and backward slicing windows—
 [](#table-of-contents)
 | slice | equivalent        | notes |
 | ----- | ----------------- | ----- |
@@ -108,7 +107,7 @@ df = {"team":    ["A","A","A","A","B","B","B","B"]
       "assists": [ 11, 8,  10, 6,  6,  5,  9,  12]}
 ```
 ```
-df[:,:4]  or  df.[:4]
+df[:,:4]  or  df[,:4]  or  df.[:4]
       {"team":    ["A","A","A","A"]
        "points":  [ 5,  7,  7,  9 ]
        "assists": [ 11, 8,  10, 6 ]}
@@ -133,16 +132,13 @@ Noda parses operators from right-to-left in a longest-match clumping pattern: `+
 | `%` | modulo | `11 % 5 == 1` | modulo remainder
 | `^` | power | `2 ^ 3 == 8` | exponent
 | `^/`| root | `3^/125 == 5` | nth root of number
-| `/\`| min | `3 /\ 5 == 5` | minimum value
-| `\/`| max | `3 \/ 5 == 3` | maximum value
-| `+*`| dot | `u +* v == 0` | matrix multiplication
-| `+-`| plus-minus | `2+-3 == 5,-1` | returns 2 results
-| `-+`| minus-plus | `2-+3 == -1,5` | returns 2 results
+| `/\`| max | `3 /\ 5 == 5` | maximum value
+| `\/`| min | `3 \/ 5 == 3` | minimum value
 
-* Times `*`, division `/`, and power `^` are elementwise on arrays/matrices like Numpy
+* Times `*`, division `/`, and power `^` perform matrix operations on arrays/matrices like Numpy
+* Prepend dot combinators `.*`, `./`, and `.^` for elementwise array multiplication
 * Juxtaposition multiplies functions: `f(x)g(x) == f(x)*g(x)`
-* Plus times `+*` computes matrix multiplication / dot product on arrays
-* Max/min return the lexically greater/less string: `"apple" \/ "banana" == "banana"`
+* Max/min return the lexically greater/less string: `"apple" /\ "banana" == "banana"`
 
 -----------------------------------------------------------------------------------------------
 
@@ -153,8 +149,6 @@ Noda parses operators from right-to-left in a longest-match clumping pattern: `+
 | `-` | minus | `-4 == -4` | negative
 | `/` | divide | `/5 == 1/5 == 0.2` | reciprocal
 | `^/`| root | `^/36 == 6` | square root
-| `+-`| plus-minus | `+-2 == +2,-2` | splats + and -
-| `-+`| minus-plus | `-+2 == -2,+2` | splats - and +
 
 * Plus `+` and minus `-` convert strings into ints/floats: `+"123" == 123`
 * Unary floordiv `\` returns the inverse of a square matrix, or the pseudoinverse 
@@ -175,8 +169,6 @@ Noda parses operators from right-to-left in a longest-match clumping pattern: `+
 | `!==`| inequivalence | `1 !== 1.0` | different objects
 
 * Strings do lexical value comparison: `"apple" < "banana"`
-* All equality comparisons are elementwise on arrays: `[1,2,3] == [1,0,3]` is `[true,false,true]`
-* Equivalence `===` compares object equality *as a whole*: `[1,2,3] === [1,0,3]` is `false`
 
 ## Strings
 [](#table-of-contents)
@@ -201,17 +193,16 @@ Noda parses operators from right-to-left in a longest-match clumping pattern: `+
 | `/`  | remove    |`"workmanship" / "kman" == "worship"`   | removes substring everywhere
 | `\`  | before    |`"try-method-x" \ "method" == "try-"`   | retains text before 1st substring
 | `%`  | remainder |`"try-method-x" % "method" == "-x"`     | retains text after 1st substring
-| `-<` | split     |`"2/14/23" -< "/" == ["2","14","23"]`   | splits on pattern (remove delimiter)
-| `+<` | snip      |`"2/14/23" +< "/" == ["2/","14/","23"]` | snips on pattern (keep delimiter)
-| `>-<`| join      |`["a","b","c"] >-< "::" == "a::b::c"`   | joins strings by delimiter
+| `<>` | split     |`"2/14/23" <> "/" == ["2","14","23"]`   | splits on pattern (remove delimiter)
+| `-<` | join      |`"::" -< ["a","b","c"] == "a::b::c"`    | joins strings by delimiter
 | `==` | match     |`'\d+\.\d+' == "420.69"`                | checks if regex matches string
 | `!=` | unmatch   |`'\d+\.\d+' != "1_000"`                 | checks if regex doesn't match string
 
 * Literal concatenation of strings works: `"wind""mill" == "windmill"` (no space between)
 * Right argument tuples limit to n-times: `"split, me, up" -< (", ", 1) == ["split", "me, up"]`
-* Unary `-<` splits on whitespace: `-<"Jane\n S Smith" == ["Jane", "S", "Smith"]`
-* Unary `>-<` joins without space: `>-<["a","b","c"] == "abc"`
-* Binary `>-<` joins lists too: `["Okay", "but", "why"] >-< [", ", " ", "?"] == "Okay, but why?"`
+* Unary `<>` splits on whitespace: `<>"Jane\n S Smith" == ["Jane", "S", "Smith"]`
+* Unary `-<` joins without space: `-<["a","b","c"] == "abc"`
+* Binary `-<` joins lists too: `["Okay", "But", "why"] -< ["! ", " ", "?"] == "Okay! But why?"`
 * Regex matching uses `==` and `!=` (match on value, not type), similar to how `1.0 == 1` despite `float` vs `int`
 
 Strings/Regexes are treated as scalars, and not split up in array calculations (unless explicitly forced to). They're like numbers in this sense:
@@ -227,7 +218,7 @@ Regexes dominate strings (string + regex -> regex): `'\d+' * " input" == '\d+inp
 | op | name | instance | notes |
 | -- | ----- | ------- | ----- |
 | `=` | assign | `x = 1` | stores value of 1 for x
-| `°=` | reassign | `x += 1` | adds 1 to current value of x
+| `⎵=` | reassign | `x += 1` | adds 1 to current value of x
 | `=<` | vacuum | `a =< b[:2]` | pops slice from b and assigns it to a
 | `:=` | define | `add(x,y):= x + y` | function definition
 | `::=` | class | `Person::= ...` | class definition
@@ -246,23 +237,27 @@ Custom operators/keywords are defined similarly to functions, but wrapped in par
 Classes are best explained by example:
 ```
 Rectangle(Shape)::=
-    __(o,height,width):=
+    o(height, width):=
         o.height = height
         o.width = width
         o.og_dimensions = (height, width)
 
-    resize(o,factor):=
+    resize(o, factor):=
         o.height *= ^/factor
         o.width *= ^/factor
 
-    lengthen(o,factor):= o.width  *= factor
-    heighten(o,factor):= o.height *= factor
+    lengthen(o, factor):= 
+        o.width  *= factor
+    heighten(o, factor):= 
+        o.height *= factor
     o.circumference := 2(o.height + o.width)
     o.area := o.height * o.width
-    o.diagonal := ^/(height^2 + width^2)
+    o.diagonal := ^/(o.height^2 + o.width^2)
 ```
 
-Inheritance works like Python, so `Rectangle(Shape)` inherits properties from `Shape`. The constructor is written with a double underscore `__`, and the `self` keyword is replaced with `o`. In the example, the constructor ingests a `height` and `width`, assigns them to class variables, and keeps a record of the original dimensions. The `resize`, `lengthen`, and `heighten` methods mutate the `Rectangle`'s dimensions by a sizing factor. Meanwhile, `circumference`, `area`, and `diagonal` are all properties of the `Rectangle` which change depending on the current `height` and `width`. 
+Inheritance works like Python, so `Rectangle(Shape)` inherits properties from `Shape`. The `self` keyword is replaced with `o` everywhere, including the constructor. In the example, the constructor ingests a `height` and `width`, assigns them to class variables, and keeps a record of the original dimensions. The `resize`, `lengthen`, and `heighten` methods mutate the `Rectangle`'s dimensions by a sizing factor. Meanwhile, `circumference`, `area`, and `diagonal` are all properties of the `Rectangle` which change depending on the current `height` and `width`. 
+
+
 
 Class `::=` defintions can be repurposed to structs, dataclasses, traits, and custom types. Class composition (using traits) is encouraged.
 
