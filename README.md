@@ -220,7 +220,7 @@ Regexes dominate strings (string + regex -> regex): `'\d+' * " input" == '\d+inp
 | `=` | assign | `x = 1` | stores value of 1 for x
 | `⎵=` | reassign | `x += 1` | adds 1 to current value of x
 | `=<` | vacuum | `a =< b[:2]` | pops slice from b and assigns it to a
-| `:=` | define | `add(x,y):= x + y` | function definition
+| `:=` | bind | `add(x,y):= x + y` | function definition
 | `::=` | class | `Person::= ...` | class definition
 
 * Reassignment mechanics are available for custom operator
@@ -233,6 +233,8 @@ Custom operators/keywords are defined similarly to functions, but wrapped in par
 (⋃)(A,B):= Union(A,B)                                  // A ⋃ B
 (send,to)(message,address):= sendoff(message,address)  // send message to address
 ```
+## OOP
+
 
 Classes are best explained by example:
 ```
@@ -255,25 +257,26 @@ Rectangle(Shape)::=
     o.diagonal := ^/(o.height^2 + o.width^2)
 ```
 
-Inheritance works like Python, so `Rectangle(Shape)` inherits properties from `Shape`. The `self` keyword is replaced with `o` everywhere, including the constructor. In the example, the constructor ingests a `height` and `width`, assigns them to class variables, and keeps a record of the original dimensions. The `resize`, `lengthen`, and `heighten` methods mutate the `Rectangle`'s dimensions by a sizing factor. Meanwhile, `circumference`, `area`, and `diagonal` are all properties of the `Rectangle` which change depending on the current `height` and `width`. 
+Inheritance works like Python, so `Rectangle(Shape)` inherits properties from `Shape`. The `self` keyword is replaced with `o` everywhere, including the constructor. In the example, the constructor ingests a `height` and `width`, assigns them to class variables, and keeps a record of the original dimensions. The `resize`, `lengthen`, and `heighten` methods mutate the `Rectangle`'s dimensions by a sizing factor. Meanwhile, `circumference`, `area`, and `diagonal` are all properties of the `Rectangle` which change depending on the current `height` and `width`. A similar example is shown below using `.:` to invoke the `super()` method.
 
+![image](https://user-images.githubusercontent.com/84992695/236964184-d009678e-643b-4fe0-b820-e4b93a6a7078.png)
 
-
-Class `::=` defintions can be repurposed to structs, dataclasses, traits, and custom types. Class composition (using traits) is encouraged.
+Class `::=` definitions can be repurposed to structs, dataclasses, traits, and custom types. Class composition (using traits) is encouraged. Worth noting, Noda enforces the locality of class attributes/methods, so `_protected` and `__private` are enforced in the compiler.
 
 ## Conditional
 [](#table-of-contents)
 | op | name | instance | notes |
 | -- | ----- | ------- | ----- |
 | `:` | if/elif | `conditional: do_this` | obviates if/elif keyword
-| `><:` | else | `><: do_default` | replaces else keyword
+| `><:` | else | `><: do_else` | replaces else keyword
 | `?:` | ternary | `if_true ? do_this : otherwise` | ternary conditional (if-then-else)
+| `?:` | switch | `variable ?: case1: do_1` | switch statement
+| `_:` | default | `variable ?: _: default` | default switch case
 | `??` | coalesce | `if_not_null ?? otherwise` | returns left argument if not null
 | `!!` | assert | `cond === true !! "condition violated"` | triggers assert if false
-| `:=:` | switch | `variable :=: case1: do_x` | switch statement
 | `::` | loop | `name in names::` | for/while loop
 | `;`  | inline | `x = 2; y = 3` | execute multiple statements inline
-| `;;` | break | `loop:: if_this: ;;` | break operator
+| `;;` | break | `loop:: if_this: do_this;;` | break operator
 
 * `?:` and `??` work like they're known to in C#/JavaScript
 * Unary `!!` triggers a generic assert error if the condition is unmet
@@ -292,17 +295,17 @@ conditional2:     do_thing2
 conditional3:     do_thing3
 ><:               do_thing4
 ```
-* Switch case `:=:` creates nested conditionals matching against the variable given:
+* Switch case `?:` creates nested conditionals matching against the variable given:
 ```
 lang = input("What's the programming language you want to learn? ")
 
-lang :=:
+lang ?:
     "JavaScript"|"JS":  print("Become a web developer")
     "Python":           print("Become a Data Scientist")
     "C++"|"Go":         print("Become a backend developer")
     "Solidity":         print("Become a Blockchain developer")
     "Java":             print("Become a mobile app developer")
-    ><:                 print("The language doesn't matter, what matters is solving problems")
+    _:                  print("The language doesn't matter, what matters is solving problems")
 ```
 * Loops `::` do a for loop or while loop depending on the condition supplied. If membership is checked (like `in`), it's a for loop. If a condition if checked (`error > 0.00001`), it's a while loop. Use triple colon `:::` to make a do-while loop that runs once without checking.
 ```
@@ -310,12 +313,12 @@ name in names::
    key, value in dict::
        key != name:  key[value] = name
 
-error > 0.00001::
+(error > threshold):::
     prev = curr
     curr = gradient_descent(curr)
     error = curr - prev
 ```
-The `for` and `while` keywords are optional for Pythonic-style programming, but not necessary. For loops are generally frowned upon, as there's almost always a vectorized (and thereby optimized) way of handling calculations. The number of semicolons in the break operator `;;` indicates how many nested levels it can break from, which can be handy.
+The `for` and `while` keywords are optional for Pythonic-style programming, but not necessary. For loops are generally frowned upon, as there's almost always a vectorized (and thereby optimized) way of handling calculations. The number of semicolons in the break operator `;;` indicates how many nested levels it can break from, which may be handy.
 
 ## Functional
 
@@ -328,7 +331,6 @@ The `for` and `while` keywords are optional for Pythonic-style programming, but 
 | `::` | type | `funct(x::int, y::int)` | explicit typing + multiple dispatch
 | `->` | output | `response(input) -> str` | specifies return type `str`
 
-* Lambda `=>` can be used to create anonymous functions like in JavaScript, but this is discouraged since inline function declarations `:=` are clearer
 * Dispatch `::` executes a multiple dispatch version of the function depending on type supplied
 * Similar to `:`, enforced output types are available
 
