@@ -31,7 +31,7 @@ OPERATOR OVERVIEW—
 RANK POLYMORPHISM
 
 ## Core Ideas
-Noda is a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirations across the programming language landscape. We target a Python audience, sharing many ideas and constructs. Here's how it compares to Python:
+Noda features a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirations across the programming language landscape. We target a Python audience, sharing many ideas and constructs. Here's how it compares to Python:
 
 #### Similarites To Python
 1. Indices start at 0
@@ -55,7 +55,7 @@ Noda is a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirations a
 8. C# operators like `??`, `?:`, `?.`, and lambdas `=>`
 9. Asserts `!!` and unit testing semantics
 10. Simplified OOP syntax, function/method composition `.`
-11. Filters `(>0)`, maps `[_+2]`, reductions `.+X`, functors
+11. Filters `(>0)`, maps `[x => x+2]`, reductions `.+X`, functors
 12. Implicit conditionals / returns, switch statements `?:`
 13. Enforced type hints, refinement/gradual typing `::`
 14. Advanced pattern matching + logical expressions `?=`
@@ -81,23 +81,23 @@ Sets `{}` and tuples `()` behave similarly to Python—sets are unordered, tuple
 | slice | equivalent        | notes |
 | ----- | ----------------- | ----- |
 | `[:5]` | `[0,1,2,3,4]`    | 0-5 exclusive
-| `[1:2:9]` | `[1,3,5,7]`   | 1-9, stepwise 2
+| `[1:9:2]` | `[1,3,5,7]`   | 1-9, stepwise 2
 | `[-4:]` | `[-4,-3,-2,-1]` | -4-0 exclusive
-| `[:2:]` | `[0,2,4,6,8..]` | unbounded, stepwise 2
+| `[::2]` | `[0,2,4,6,8..]` | unbounded, stepwise 2
 | `[3:]`  | `[3,4,5,6,7..]` | numbers 3+
 | `[2+:4]` | `[2,3,4,5]`    | 2 with 4 indices ahead
 | `[6-:3]` | `[4,5,6]`      | 6 with 3 indices behind
 
 Dictionaries use Pythonic syntax `{key: value}`, but can double as Pandas dataframes. Dicts and arrays benefit from dimensional Numpy indexing:
-`matrix[:10,:10] === matrix[:10][:10]`
-`dict["key","field"] === dict["key"]["field"]`
+`matrix[:10,:10] == matrix[:10][:10]`
+`dict["key","field"] == dict["key"]["field"]`
 
-All arrays/lists `[]` are n-dimensional arrays, and mimic the conventions of Numpy/Pytorch/Tensorflow. Likewise, all dicts are dataframes and mimic many of the conventions of Pandas. Both may be indexed along each dimension:
+All arrays/lists `[]` are n-dimensional arrays, and mimic the conventions of Numpy/Pytorch/Tensorflow. Likewise, all dicts are dataframes and mimic the conventions of Pandas (but without loc and iloc). Both may be indexed along each dimension:
 ```
 X = [[1,2,3],[4,5,6]]
-X[1]      [4,5,6]         // 2nd row              
-X[:,0]    [[1],[4]]       // 1st column        
-X[:,0:2]  [[1,2],[4,5]]   // 1st & 2nd column        
+X[1]       [4,5,6]         // 2nd row              
+X[:, 0]    [[1],[4]]       // 1st column        
+X[:, 0:2]  [[1,2],[4,5]]   // 1st & 2nd column        
 ```
 Arrays of 2+ dimensions can use `;` to delimit columns instead of nested arrays: `[[1,2],[4,5]] === [1,2; 4,5]`
 
@@ -106,17 +106,18 @@ df = {"team":    ["A","A","A","A","B","B","B","B"]
       "points":  [ 5,  7,  7,  9,  12, 9,  9,  4 ]
       "assists": [ 11, 8,  10, 6,  6,  5,  9,  12]}
 ```
+Shortcut for indexing on row slices— replace `[]` brackets with `()` parentheses. `df(:5)` will retrieve the 1st 5 rows of `df`.
 ```
-df[:,:4]  or  df[,:4]  or  df.[:4]
-      {"team":    ["A","A","A","A"]
-       "points":  [ 5,  7,  7,  9 ]
-       "assists": [ 11, 8,  10, 6 ]}
+df[:,:5]  or  df[,:5]  or  df(:5)
+      {"team":    ["A","A","A","A","B"]
+       "points":  [ 5,  7,  7,  9,  12]
+       "assists": [ 11, 8,  10, 6,  6 ]}
 ```
-Here, `df.[:4]` is equivalent to `df.iloc[:4]` in Pandas, which grabs the first 4 rows of the dataframe.
+Broadly speaking, `X[:n]` collects the 1st n values along the *first* dimension, whereas `matrix(:n)` collects along the *last* dimension.
 
 ## Operators
 
-Noda parses operators from right-to-left in a longest-match clumping pattern: `++->-<<>^^/` is parsed as `(+)(+-)(>-<)(<>)(^)(^/)`
+Noda parses operators from right-to-left in a longest-match clumping pattern: `++->-<<>^^/` is parsed as `(+)(->)(><)(<>)(^)(^/)`
 
 ### Arithmetic
 
