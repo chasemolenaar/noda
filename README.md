@@ -12,21 +12,21 @@ OPERATOR OVERVIEW—
 [](#table-of-contents)
 | Family | Operators |
 | ------ | --------- |
-| Arithmetic | `+ - * / \ % ^ ^/ /\ \/`
+| Arithmetic | `+ - * / \ // % ^ ^/`
 | Indexing | `: +: -:`
-| Comparison | `> < >= <= == != %%` 
-| Array | `++ -- ** ^^ \\ << >>`
-| String | `* ^ / \ %`
-| Conditional | `: ><: :: ?: _: ?? !! ; ;;`
-| Assignment | `= ⎵= := ::= :=: =< => ->`
-| Membership | `# @ $`
-| Morphers | `~ % ^ * ** \ .`
+| Comparison | `> < >= <= %% == != === !==` 
+| Array | `++ -- ** ^^ \\ << >> <>`
+| Conditional | `: ><: :: ?: ?? !!`
+| Assignment | `= ⎵= := ::= :=: =< =>`
+| Membership | `-> -< !> !< #`
 | Logic | `? ! & \| >< <=> >=<`
-| Pattern | `_ : ⎵+ ⎵* ⎵? ?= ?!`
-| Combinator | `.⎵ °⎵ ~⎵ !⎵ (⎵)`
-| Port | `$ >-> -> <-<`
+| Pattern | `: ⎵+ ⎵* ⎵? ⎵<:> ,,`
+| Combinator | `.⎵ !⎵`
+| Port | `>=> => <=<`
 
-\*The bottom bracket `⎵` is used to indicate \[*insert any operator*\]. `//` and `/* */` enclose comments like in C++.
+(⎵) needs to be handled
+
+\*The bottom bracket `⎵` is used to indicate \[*insert any operator*\]. Comments use the backtick ``` `comment ``` and hide the tick in your IDE.
 
 RANK POLYMORPHISM
 
@@ -39,15 +39,15 @@ Noda features a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirat
 3. Strides `start:stop:step` such as `::each` 
 4. Indentation sensitivity (ifs, loops, classes, etc.)
 5. Pythonic keywords and built-ins are valid
-6. Dict, Set dataframe, tuple, and array syntax
+6. Dict, Set, Dataframe, Tuple, and Array syntax
 7. Embeddable, can import Python libraries 
 8. Similar OOP, dataclass support, decorators
 9. File and import system frameworks
 
 #### Differences From Python
-1. Comments use `//` and `/* */`
-2. Exponentiation is `^`, floor division is `\`
-3. \____________________________________________
+1. Comments use backticks ``` ` ```
+2. Exponentiation is `^`, Root operator is `^/`
+3. Keywordless for and while loops, if-elif-else branching
 4. Function `:=` and Class `::=` definition operators
 5. Strings use quotes `""`, regexes use apostrophes `''`
 6. Lists == Arrays `[]`, Dicts == Dataframes `{}`
@@ -55,10 +55,10 @@ Noda features a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirat
 8. C# operators like `??`, `?:`, `?.`, and lambdas `=>`
 9. Asserts `!!` and unit testing semantics
 10. Simplified OOP syntax, function/method composition `.`
-11. Filters `(>0)`, maps `[x => x+2]`, reductions `.+X`, functors
+11. Filters `(>0)`, maps `[x => x+2]`, reductions `nums(+)`, functors
 12. Implicit conditionals / returns, switch statements `?:`
 13. Enforced type hints, refinement/gradual typing `::`
-14. Advanced pattern matching + logical expressions `?=`
+14. Advanced pattern matching + logical expressions `#?`
 15. Uniform function call syntax `list.f()`
 16. Everything is a function / is a callable
 17. Enforced \_protected and \_\_private variables
@@ -73,31 +73,34 @@ Noda features a supercharged Numpy/Pandas/PyTorch hybrid, with synactic inspirat
 | `{}` | set | `{1,2,3,4}` | unordered
 | `[)` | ring | `[1,2,3,4,5)` | loops on itself
 | `[]` | array | `[1,2,3,4,5]` | n-dimensional array
-| `[:]`| slice | `[1:5]` | iterable
+| `(:)`| range | `(1:9:2)` | iterable slice
 | `{}` | dict | `{"a": 1, "b": 2}` | dict and dataframe
 
-Sets `{}` and tuples `()` behave similarly to Python—sets are unordered, tuples are immutable. Rings `[)` are like lists, but loop back on themselves and are indexable anywhere: `[0,1,2,3)[4] == [0,1,2,3)[0] == 0`. Like Numpy, arrays are n-dimensional and can be used for matrix operations. However, they may contain multiple datatypes at once, and not be rectangular (e.g. differing lengths of rows). Slices are iterables like `start:stop`, includes `start` but excludes `stop`. Strides are similar, but the `step` size is in the middle: `start:step:stop`. Use `+:` and `-:` to set forward and backward slicing windows—
+Sets `{}` and tuples `()` behave similarly to Python—sets are unordered, tuples are immutable. Rings `[)` are like lists, but loop back on themselves and are indexable anywhere: `[0,1,2,3)[4] == [0,1,2,3)[0] == 0`. Like Numpy, arrays are n-dimensional and can be used for matrix operations. However, they may contain multiple datatypes at once, or not be rectangular (e.g. differing lengths of rows). Ranges are iterables like `start:stop`, includes `start` but excludes `stop`. Strides are similar, but the `step` size is in the middle: `start:step:stop`. Use `+:` and `-:` to set forward and backward slicing windows—
 [](#table-of-contents)
 | slice | equivalent        | notes |
 | ----- | ----------------- | ----- |
-| `[:5]` | `[0,1,2,3,4]`    | 0-5 exclusive
-| `[1:9:2]` | `[1,3,5,7]`   | 1-9, stepwise 2
-| `[-4:]` | `[-4,-3,-2,-1]` | -4-0 exclusive
-| `[::2]` | `[0,2,4,6,8..]` | unbounded, stepwise 2
-| `[3:]`  | `[3,4,5,6,7..]` | numbers 3+
-| `[2+:4]` | `[2,3,4,5]`    | 2 with 4 indices ahead
-| `[6-:3]` | `[4,5,6]`      | 6 with 3 indices behind
+| `(:5)` | `(0,1,2,3,4)`    | 0-5 exclusive
+| `(1:9:2)` | `(1,3,5,7)`   | 1-9, stepwise 2
+| `(-4:)` | `(-4,-3,-2,-1)` | -4-0 exclusive
+| `(::2)` | `(0,2,4,6,8..)` | unbounded, stepwise 2
+| `(3:)`  | `(3,4,5,6,7..)` | numbers 3+
+| `(2+:4)` | `(2,3,4,5)`    | 2 with 4 indices ahead
+| `(6-:3)` | `(4,5,6)`      | 6 with 3 indices behind
 
 Dictionaries use Pythonic syntax `{key: value}`, but can double as Pandas dataframes. Dicts and arrays benefit from dimensional Numpy indexing:
-`matrix[:10,:10] == matrix[:10][:10]`
-`dict["key","field"] == dict["key"]["field"]`
+`matrix[:10, :10] == matrix[:10][:10]`
+`dict["key", "field"] == dict["key"]["field"]`
 
 All arrays/lists `[]` are n-dimensional arrays, and mimic the conventions of Numpy/Pytorch/Tensorflow. Likewise, all dicts are dataframes and mimic the conventions of Pandas (but without loc and iloc). Both may be indexed along each dimension:
 ```
-X = [[1,2,3],[4,5,6]]
-X[1]       [4,5,6]         // 2nd row              
-X[:, 0]    [[1],[4]]       // 1st column        
-X[:, 0:2]  [[1,2],[4,5]]   // 1st & 2nd column        
+X = [[1,2,3],[4,5,6]]      `2x3 matrix X
+X = [1,2,3; 4,5,6]         `2x3 matrix X
+X = [1  2  3|
+    |4  5  6]
+X[1]       [4,5,6]         `2nd row              
+X[:, 0]    [[1],[4]]       `1st column        
+X[:, 0:2]  [[1,2],[4,5]]   `1st & 2nd column        
 ```
 Arrays of 2+ dimensions can use `;` to delimit columns instead of nested arrays: `[[1,2],[4,5]] === [1,2; 4,5]`
 
